@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Онцгой Урилга ✨</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --clr-bg-dark: #080711;
+      --clr-bg-card: rgba(22, 18, 38, 0.75);
+      --clr-glass-border: rgba(255, 255, 255, 0.12);
+      --clr-glass-border-hover: rgba(255, 255, 255, 0.25);
+      --clr-primary: #ff2a5f;
+      --clr-primary-glow: rgba(255, 42, 95, 0.4);
+      --clr-secondary: #8b5cf6;
+      --clr-accent: #ec4899;
+      --clr-text-main: #f8fafc;
+      --clr-text-muted: #94a3b8;
+      --font-sans: 'Plus Jakarta Sans', sans-serif;
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--clr-bg-dark);
+      font-family: var(--font-sans);
+      color: var(--clr-text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .bg-wrapper {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .glow-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.45;
+      animation: floatAnimation 18s ease-in-out infinite alternate;
+    }
+
+    .orb-primary {
+      width: 450px;
+      height: 450px;
+      background: var(--clr-primary);
+      top: -10%;
+      left: -5%;
+    }
+
+    .orb-secondary {
+      width: 550px;
+      height: 550px;
+      background: var(--clr-secondary);
+      bottom: -15%;
+      right: -10%;
+      animation-delay: -6s;
+    }
+
+    .orb-accent {
+      width: 350px;
+      height: 350px;
+      background: var(--clr-accent);
+      top: 40%;
+      left: 40%;
+      animation-delay: -12s;
+    }
+
+    @keyframes floatAnimation {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(60px, 40px) scale(1.1); }
+      100% { transform: translate(-40px, 80px) scale(0.95); }
+    }
+
+    .stars-overlay {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 0);
+      background-size: 24px 24px;
+      opacity: 0.3;
+    }
+
+    #hearts-canvas, #confetti-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+    }
+
+    #hearts-canvas { z-index: 1; }
+    #confetti-canvas { z-index: 100; }
+
+    .app-viewport {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 540px;
+      margin: auto;
+    }
+
+    .card-glass-container {
+      background: var(--clr-bg-card);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--clr-glass-border);
+      border-radius: 32px;
+      padding: 40px 32px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .progress-bar-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 16.6%;
+      background: linear-gradient(90deg, var(--clr-primary), var(--clr-accent));
+      transition: width 0.5s var(--ease-smooth);
+    }
+
+    .step-view {
+      display: none;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.4s var(--ease-smooth), transform 0.4s var(--ease-smooth);
+    }
+
+    .step-view.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 100px;
+      background: rgba(255, 42, 95, 0.12);
+      border: 1px solid rgba(255, 42, 95, 0.3);
+      color: #ff6b8b;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--clr-primary);
+      box-shadow: 0 0 10px var(--clr-primary);
+      animation: pulseDot 1.8s infinite;
+    }
+
+    @keyframes pulseDot {
+      0%, 100% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.3); opacity: 1; }
+    }
+
+    .hero-title {
+      font-family: var(--font-serif);
+      font-size: 32px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-desc {
+      color: var(--clr-text-muted);
+      font-size: 15px;
+      line-height: 1.65;
+      margin-bottom: 24px;
+    }
+
+    .chapter-header { margin-bottom: 20px; }
+    .chapter-num {
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--clr-primary);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .chapter-title { font-size: 22px; font-weight: 700; color: #fff; }
+
+    .story-scroll-box {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .paragraph {
+      color: var(--clr-text-muted);
+      font-size: 14.5px;
+      line-height: 1.7;
+      margin-bottom: 12px;
+      text-align: justify;
+    }
+    .paragraph:last-child { margin-bottom: 0; }
+
+    .counter-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--clr-glass-border);
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .counter-label { font-size: 12.5px; color: var(--clr-text-muted); margin-bottom: 12px; }
+
+    .time-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+    .time-unit {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 8px 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .time-val { font-size: 20px; font-weight: 800; color: var(--clr-primary); }
+    .time-lbl { font-size: 10px; color: var(--clr-text-muted); margin-top: 2px; }
+
+    .customizer-form { display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px; }
+    .input-group { display: flex; flex-direction: column; gap: 8px; text-align: left; }
+    .input-group label { font-size: 13.5px; font-weight: 600; color: var(--clr-text-muted); }
+
+    .glass-input {
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--clr-glass-border);
+      border-radius: 14px;
+      color: #fff;
+      font-family: inherit;
+      font-size: 14px;
+      outline: none;
+    }
+    .glass-input:focus { border-color: var(--clr-primary); }
+    .glass-input.textarea { resize: vertical; min-height: 70px; }
+
+    .activity-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .activity-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--clr-glass-border);
+      border-radius: 14px;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .activity-card.active {
+      background: rgba(255, 42, 95, 0.15);
+      border-color: var(--clr-primary);
+    }
+    .card-icon { font-size: 22px; }
+    .card-name { font-size: 13px; font-weight: 600; }
+
+    .action-footer { display: flex; gap: 12px; margin-top: 10px; }
+    .action-footer.double .btn { flex: 1; }
+
+    .btn {
+      padding: 14px 28px;
+      border-radius: 100px;
+      font-size: 14.5px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--clr-primary) 0%, var(--clr-accent) 100%);
+      color: #fff;
+      box-shadow: 0 8px 20px var(--clr-primary-glow);
+    }
+    .btn-primary:hover { transform: translateY(-2px); }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--clr-text-muted);
+      border: 1px solid var(--clr-glass-border);
+    }
+
+    .interactive-question-box {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px dashed var(--clr-glass-border);
+      border-radius: 20px;
+      padding: 24px 16px;
+      text-align: center;
+    }
+    .question-text { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
+
+    .runaway-button-wrapper {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      position: relative;
+      min-height: 50px;
+    }
+
+    .btn-yes-fixed { position: absolute; left: 20px; width: 120px; }
+    .btn-no-runaway { position: absolute; right: 20px; width: 120px; background: rgba(255,255,255,0.15); color: #fff; }
+
+    .success-banner { text-align: center; margin-bottom: 20px; }
+    .heart-bounce { font-size: 48px; margin-bottom: 8px; }
+
+    .ticket-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+    .ticket-top { display: flex; justify-content: space-between; align-items: center; }
+    .ticket-brand { font-size: 11px; font-weight: 800; color: var(--clr-primary); letter-spacing: 1.5px; }
+    .ticket-tag { background: rgba(34, 197, 94, 0.2); color: #4ade80; padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 700; }
+    .ticket-divider { height: 1px; border-bottom: 2px dashed rgba(255,255,255,0.15); margin: 12px 0; }
+    .ticket-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; text-align: left; }
+    .field-label { font-size: 10.5px; color: var(--clr-text-muted); display: block; margin-bottom: 2px; }
+    .field-value { font-size: 13px; font-weight: 700; color: #fff; }
+    .ticket-note-section { margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.08); text-align: left; }
+    .pass-note-text { font-size: 12px; color: var(--clr-text-muted); font-style: italic; }
+    .ticket-footer { text-align: center; margin-top: 14px; padding-top: 10px; border-top: 1px dashed rgba(255,255,255,0.15); font-size: 11px; color: var(--clr-text-muted); }
+  </style>
+</head>
+<body>
+
+  <!-- Animated Background Elements -->
+  <div class="bg-wrapper">
+    <div class="glow-orb orb-primary"></div>
+    <div class="glow-orb orb-secondary"></div>
+    <div class="glow-orb orb-accent"></div>
+    <div class="stars-overlay"></div>
+  </div>
+
+  <!-- Floating Hearts Canvas Background -->
+  <canvas id="hearts-canvas"></canvas>
+
+  <!-- Main Card Wrapper -->
+  <main class="app-viewport">
+    <div class="card-glass-container" id="main-card">
+      
+      <!-- Progress Bar -->
+      <div class="progress-bar-container">
+        <div class="progress-bar-fill" id="progress-bar"></div>
+      </div>
+
+      <!-- STEP 0: WELCOME & COUNTER -->
+      <section id="step-0" class="step-view active">
+        <div class="badge-pill">
+          <span class="pulse-dot"></span> Special Invitation
+        </div>
+        <h1 class="hero-title">Чамтай учирснаас хойш...</h1>
+        
+        <!-- Live Time Counter -->
+        <div class="counter-card">
+          <p class="counter-label">Бидний анх танилцсанаас хойш өнгөрсөн хугацаа:</p>
+          <div class="time-grid">
+            <div class="time-unit">
+              <span id="cnt-days" class="time-val">00</span>
+              <span class="time-lbl">Өдөр</span>
+            </div>
+            <div class="time-unit">
+              <span id="cnt-hours" class="time-val">00</span>
+              <span class="time-lbl">Цаг</span>
+            </div>
+            <div class="time-unit">
+              <span id="cnt-mins" class="time-val">00</span>
+              <span class="time-lbl">Минут</span>
+            </div>
+            <div class="time-unit">
+              <span id="cnt-secs" class="time-val">00</span>
+              <span class="time-lbl">Секунд</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="hero-desc">
+          Энэ цаг хугацаа бүхэн миний амьдралын хамгийн нандин дурсамжуудыг бүтээж байна. Чамд зориулж бэлдсэн бяцхан урилгыг минь нээж үзээрэй.
+        </p>
+
+        <div class="action-footer">
+          <button class="btn btn-primary btn-glow" onclick="goToStep(1)">
+            <span>Захидлыг нээх ✨</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- STEP 1: CHAPTER ONE -->
+      <section id="step-1" class="step-view">
+        <div class="chapter-header">
+          <span class="chapter-num">Бүлэг I</span>
+          <h2 class="chapter-title">Анхны сэтгэгдэл ба Дулаахан мэдрэмж</h2>
+        </div>
+
+        <div class="story-scroll-box">
+          <p class="paragraph">
+            Тантай анх уулзсан тэр нэгэн саруулхан өдрийг одоо хүртэл тод санаж байна. Амьдралын минь энгийн нэгэн хуудас байж болох байсан ч, чиний инээмсэглэл болон дулаахан яриа бүх зүйлийг өөрчилсөн.
+          </p>
+          <p class="paragraph">
+            Чамтай хамт байхад цаг хугацаа ямар хурдан өнгөрдгийг, бас чамайг эчнээ хайрлах мэдрэмж сэтгэлийг минь хэрхэн дүүргэдгийг анзаарсан юм.
+          </p>
+        </div>
+
+        <div class="action-footer double">
+          <button class="btn btn-secondary" onclick="goToStep(0)">Буцах</button>
+          <button class="btn btn-primary" onclick="goToStep(2)">Дараагийнх ➔</button>
+        </div>
+      </section>
+
+      <!-- STEP 2: CHAPTER TWO -->
+      <section id="step-2" class="step-view">
+        <div class="chapter-header">
+          <span class="chapter-num">Бүлэг II</span>
+          <h2 class="chapter-title">Нандин дурсамжуудын цуглуулга</h2>
+        </div>
+
+        <div class="story-scroll-box">
+          <p class="paragraph">
+            Хамтдаа алхсан гудамж, тухтай суун ярилцсан кофены мухар, эсвэл зүгээр л чимээгүй бие биенээ ширтэн суусан мөч бүхэн миний хувьд үнэт эрдэнэ мэт.
+          </p>
+          <p class="paragraph">
+            Би чамтай хамт байхдаа л хамгийн өөрийнхөөрөө, ямар ч баггүйгээр чин сэтгэлээсээ жаргалтай байж чаддаг. Тиймээс энэ нандин дурсамжууддаа дахин нэг шинэ хуудас нэмэхийг хүсэж байна.
+          </p>
+        </div>
+
+        <div class="action-footer double">
+          <button class="btn btn-secondary" onclick="goToStep(1)">Буцах</button>
+          <button class="btn btn-primary" onclick="goToStep(3)">Бүрдэл сонгох ➔</button>
+        </div>
+      </section>
+
+      <!-- STEP 3: DATE CUSTOMIZER -->
+      <section id="step-3" class="step-view">
+        <div class="chapter-header">
+          <span class="chapter-num">Бүлэг III</span>
+          <h2 class="chapter-title">Болзооны төлөвлөгөө ба тохиргоо</h2>
+        </div>
+
+        <div class="customizer-form">
+          <div class="input-group">
+            <label for="date-time-picker">1. Уулзах өдөр болон цаг:</label>
+            <input type="datetime-local" id="date-time-picker" class="glass-input" />
+          </div>
+
+          <div class="input-group">
+            <label>2. Ямар болзоонд явмаар байна вэ? (Сонгоно уу):</label>
+            <div class="activity-grid">
+              <div class="activity-card active" onclick="selectActivity(this, 'Романтик оройн хоол & Дээврийн ресторан 🥂')">
+                <span class="card-icon">🥂</span>
+                <span class="card-name">Оройн хоол</span>
+              </div>
+              <div class="activity-card" onclick="selectActivity(this, 'Кофены тухтай соёл & Сэтгэлийн яриа ☕')">
+                <span class="card-icon">☕</span>
+                <span class="card-name">Кофе & Яриа</span>
+              </div>
+              <div class="activity-card" onclick="selectActivity(this, 'Кино театр & Амтат попкорн 🍿')">
+                <span class="card-icon">🍿</span>
+                <span class="card-name">Кино үзэх</span>
+              </div>
+              <div class="activity-card" onclick="selectActivity(this, 'Цэцэрлэгт хүрээлэн & Байгальд салхилах 🎡')">
+                <span class="card-icon">🎡</span>
+                <span class="card-name">Салхинд гарах</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label for="custom-note">3. Надад дамжуулах тусгай хүсэлт оруулах:</label>
+            <textarea id="custom-note" class="glass-input textarea" placeholder="Таны тусгай хүсэлт эсвэл санаа..."></textarea>
+          </div>
+        </div>
+
+        <div class="action-footer double">
+          <button class="btn btn-secondary" onclick="goToStep(2)">Буцах</button>
+          <button class="btn btn-primary" onclick="validateCustomizer()">Урилга руу шилжих ➔</button>
+        </div>
+      </section>
+
+      <!-- STEP 4: THE QUESTION -->
+      <section id="step-4" class="step-view">
+        <div class="chapter-header">
+          <span class="chapter-num">Эцсийн алхам</span>
+          <h2 class="chapter-title">Миний бяцхан урилга 🌹</h2>
+        </div>
+
+        <p class="hero-desc">
+          Өдөр тутмын их ажлаас түр хөндийрч, зөвхөн хоёулханаа амттай хоол идэж, сайхан яриа дэлгэн нэгэн үдшийг маргашгүй өнгөрүүлбэл ямар вэ?
+        </p>
+
+        <div class="interactive-question-box">
+          <h3 class="question-text">Намтай болзоонд явах уу? 🥺</h3>
+          <div class="runaway-button-wrapper">
+            <button id="btn-yes" class="btn btn-primary btn-yes-fixed" onclick="onAcceptInvitation()">
+              Тийм ээ! 💖
+            </button>
+            <button id="btn-no" class="btn btn-danger btn-no-runaway" onmouseover="evadeNoButton()" onclick="evadeNoButton()">
+              Үгүй 😜
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- STEP 5: TICKET PASS -->
+      <section id="step-5" class="step-view">
+        <div class="success-banner">
+          <div class="heart-bounce">🎉</div>
+          <h2>Зөвшөөрсөнд маш их баярлалаа!</h2>
+          <p>Бидэнд гайхалтай сайхан өдөр хүлээж байна!</p>
+        </div>
+
+        <div class="ticket-card" id="boarding-pass">
+          <div class="ticket-top">
+            <span class="ticket-brand">DATE PASS #001</span>
+            <span class="ticket-tag">APPROVED</span>
+          </div>
+          <div class="ticket-divider"></div>
+          <div class="ticket-grid">
+            <div class="ticket-field">
+              <span class="field-label">ХЭНД:</span>
+              <span class="field-value">Хамгийн онцгой хүнд</span>
+            </div>
+            <div class="ticket-field">
+              <span class="field-label">ХӨТӨЛБӨР:</span>
+              <span class="field-value" id="pass-activity">Романтик оройн хоол</span>
+            </div>
+            <div class="ticket-field">
+              <span class="field-label">ХЭЗЭЭ:</span>
+              <span class="field-value" id="pass-time">Тодорхойгүй</span>
+            </div>
+            <div class="ticket-field">
+              <span class="field-label">БАЙРШИЛ:</span>
+              <span class="field-value">Нууц сонирхолтой газар 🤫</span>
+            </div>
+          </div>
+          <div class="ticket-note-section" id="pass-note-container" style="display: none;">
+            <span class="field-label">ТУСГАЙ САНАМЖ:</span>
+            <p id="pass-note-text" class="pass-note-text"></p>
+          </div>
+          <div class="ticket-footer">
+            <span>✨ Тантай уулзах хором бүрийг тэсэн ядан хүлээж байна ✨</span>
+          </div>
+        </div>
+
+        <div class="action-footer">
+          <button class="btn btn-secondary" onclick="resetApp()">Эхлэл рүү буцах 🔄</button>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <canvas id="confetti-canvas"></canvas>
+
+  <script>
+    const AppState = {
+      currentStep: 0,
+      totalSteps: 5,
+      startDate: new Date("2024-01-01T00:00:00"),
+      selectedActivity: "Романтик оройн хоол & Дээврийн ресторан 🥂",
+      selectedDateTime: "",
+      customNote: ""
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+      initLiveCounter();
+      initFloatingHeartsCanvas();
+      updateProgressBar();
+    });
+
+    function goToStep(stepNumber) {
+      if (stepNumber < 0 || stepNumber > AppState.totalSteps) return;
+
+      const currentView = document.getElementById(`step-${AppState.currentStep}`);
+      const nextView = document.getElementById(`step-${stepNumber}`);
+
+      if (currentView && nextView) {
+        currentView.classList.remove("active");
+        
+        setTimeout(() => {
+          AppState.currentStep = stepNumber;
+          nextView.classList.add("active");
+          updateProgressBar();
+        }, 150);
+      }
+    }
+
+    function updateProgressBar() {
+      const progressBar = document.getElementById("progress-bar");
+      if (progressBar) {
+        const percentage = ((AppState.currentStep + 1) / (AppState.totalSteps + 1)) * 100;
+        progressBar.style.width = `${percentage}%`;
+      }
+    }
+
+    function initLiveCounter() {
+      function updateCounter() {
+        const now = new Date();
+        const diff = now - AppState.startDate;
+
+        if (diff < 0) return;
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((diff / 1000 / 60) % 60);
+        const seconds = Math.floor((diff / 1000) % 60);
+
+        const dEl = document.getElementById("cnt-days");
+        if (dEl) {
+          dEl.innerText = String(days).padStart(2, '0');
+          document.getElementById("cnt-hours").innerText = String(hours).padStart(2, '0');
+          document.getElementById("cnt-mins").innerText = String(minutes).padStart(2, '0');
+          document.getElementById("cnt-secs").innerText = String(seconds).padStart(2, '0');
+        }
+      }
+
+      updateCounter();
+      setInterval(updateCounter, 1000);
+    }
+
+    function selectActivity(element, activityTitle) {
+      const cards = document.querySelectorAll(".activity-card");
+      cards.forEach(card => card.classList.remove("active"));
+
+      element.classList.add("active");
+      AppState.selectedActivity = activityTitle;
+    }
+
+    function validateCustomizer() {
+      const dateInput = document.getElementById("date-time-picker").value;
+
+      if (!dateInput) {
+        alert("Хамтдаа явах өдөр болон цагаа сонгоно уу! 📅");
+        return;
+      }
+
+      const dateObj = new Date(dateInput);
+      const options = { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric', 
+        hour: '2-digit', 
+        minute: '2-digit' 
+      };
+      AppState.selectedDateTime = dateObj.toLocaleDateString('mn-MN', options);
+      AppState.customNote = document.getElementById("custom-note").value;
+
+      goToStep(4);
+    }
+
+    function evadeNoButton() {
+      const noBtn = document.getElementById("btn-no");
+      const card = document.getElementById("main-card");
+
+      const maxX = card.clientWidth - noBtn.clientWidth - 30;
+      const maxY = card.clientHeight - noBtn.clientHeight - 30;
+
+      const randomX = Math.floor(Math.random() * maxX) - (maxX / 2);
+      const randomY = Math.floor(Math.random() * maxY) - (maxY / 2);
+
+      noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
+    }
+
+    function onAcceptInvitation() {
+      document.getElementById("pass-activity").innerText = AppState.selectedActivity;
+      document.getElementById("pass-time").innerText = AppState.selectedDateTime || "Тохиролцох 🗓️";
+
+      if (AppState.customNote.trim() !== "") {
+        document.getElementById("pass-note-container").style.display = "block";
+        document.getElementById("pass-note-text").innerText = `"${AppState.customNote}"`;
+      }
+
+      goToStep(5);
+      launchConfettiFireworks();
+    }
+
+    function resetApp() {
+      AppState.currentStep = 0;
+      document.getElementById("date-time-picker").value = "";
+      document.getElementById("custom-note").value = "";
+      
+      const noBtn = document.getElementById("btn-no");
+      noBtn.style.transform = "translate(0,0)";
+
+      goToStep(0);
+    }
+
+    function initFloatingHeartsCanvas() {
+      const canvas = document.getElementById("hearts-canvas");
+      if(!canvas) return;
+      const ctx = canvas.getContext("2d");
+
+      let width = canvas.width = window.innerWidth;
+      let height = canvas.height = window.innerHeight;
+
+      window.addEventListener("resize", () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      });
+
+      const hearts = [];
+      for (let i = 0; i < 20; i++) {
+        hearts.push({
+          x: Math.random() * width,
+          y: height + Math.random() * 100,
+          size: Math.random() * 10 + 6,
+          speed: Math.random() * 1.2 + 0.4,
+          opacity: Math.random() * 0.4 + 0.2
+        });
+      }
+
+      function render() {
+        ctx.clearRect(0, 0, width, height);
+        hearts.forEach(h => {
+          h.y -= h.speed;
+          if (h.y < -20) h.y = height + 20;
+
+          ctx.save();
+          ctx.globalAlpha = h.opacity;
+          ctx.fillStyle = "#ff2a5f";
+          ctx.beginPath();
+          ctx.arc(h.x, h.y, h.size / 2, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        });
+        requestAnimationFrame(render);
+      }
+      render();
+    }
+
+    function launchConfettiFireworks() {
+      const canvas = document.getElementById("confetti-canvas");
+      if(!canvas) return;
+      const ctx = canvas.getContext("2d");
+
+      let width = canvas.width = window.innerWidth;
+      let height = canvas.height = window.innerHeight;
+
+      const particles = [];
+      const colors = ["#ff2a5f", "#ec4899", "#8b5cf6", "#3b82f6", "#10b981", "#f59e0b"];
+
+      for (let i = 0; i < 120; i++) {
+        particles.push({
+          x: width / 2,
+          y: height / 2,
+          vx: (Math.random() - 0.5) * 16,
+          vy: (Math.random() - 0.5) * 16 - 3,
+          size: Math.random() * 7 + 3,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          gravity: 0.2,
+          opacity: 1
+        });
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, width, height);
+
+        particles.forEach((p, i) => {
+          p.vy += p.gravity;
+          p.x += p.vx;
+          p.y += p.vy;
+          p.opacity -= 0.009;
+
+          ctx.save();
+          ctx.globalAlpha = Math.max(0, p.opacity);
+          ctx.fillStyle = p.color;
+          ctx.fillRect(p.x, p.y, p.size, p.size);
+          ctx.restore();
+
+          if (p.opacity <= 0) particles.splice(i, 1);
+        });
+
+        if (particles.length > 0) requestAnimationFrame(animate);
+      }
+      animate();
+    }
+  </script>
+</body>
+</html>
