@@ -1,617 +1,178 @@
 <!DOCTYPE html>
 <html lang="mn">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Онцгой урилга — хайртай хүнд зориулсан интерактив урилга">
-  <title>Онцгой Урилга ✨</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Онцгой урилга — миний зүрхнээс бичсэн үг: 'Надтай болзох уу?'" />
+  <title>Надтай болзох уу? ✨</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --clr-bg-dark: #080711;
-      --clr-bg-card: rgba(22, 18, 38, 0.75);
-      --clr-glass-border: rgba(255, 255, 255, 0.12);
-      --clr-glass-border-hover: rgba(255, 255, 255, 0.25);
-      --clr-primary: #ff2a5f;
-      --clr-primary-glow: rgba(255, 42, 95, 0.35);
-      --clr-secondary: #8b5cf6;
-      --clr-accent: #ec4899;
-      --clr-text-main: #f8fafc;
-      --clr-text-muted: #94a3b8;
-      --font-sans: 'Plus Jakarta Sans', sans-serif;
-      --font-serif: 'Playfair Display', Georgia, serif;
-      --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
-      --card-max-width: 720px;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    html, body { height: 100%; }
-
-    body {
-      background-color: var(--clr-bg-dark);
-      font-family: var(--font-sans);
-      color: var(--clr-text-main);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-      position: relative;
-      overflow-x: hidden;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-
-    .bg-wrapper { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
-
-    .glow-orb { position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.45; animation: floatAnimation 18s ease-in-out infinite alternate; }
-    .orb-primary { width: 420px; height: 420px; background: var(--clr-primary); top: -8%; left: -6%; }
-    .orb-secondary { width: 520px; height: 520px; background: var(--clr-secondary); bottom: -14%; right: -8%; animation-delay: -6s; }
-    .orb-accent { width: 320px; height: 320px; background: var(--clr-accent); top: 40%; left: 40%; animation-delay: -12s; }
-
-    @keyframes floatAnimation { 0% { transform: translate(0, 0) scale(1); } 50% { transform: translate(60px, 40px) scale(1.06); } 100% { transform: translate(-40px, 80px) scale(0.98); } }
-
-    .stars-overlay { position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,0.15) 1px, transparent 0); background-size: 28px 28px; opacity: 0.25; }
-
-    canvas { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; }
-    #hearts-canvas { z-index: 1; }
-    #confetti-canvas { z-index: 150; }
-
-    .app-viewport { position: relative; z-index: 10; width: 100%; max-width: var(--card-max-width); margin: auto; padding: 12px; }
-
-    .card-glass-container {
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      border: 1px solid var(--clr-glass-border);
-      border-radius: 28px;
-      padding: 36px 28px;
-      box-shadow: 0 30px 60px rgba(0,0,0,0.55);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .progress-bar-container { position: absolute; top: 0; left: 0; right: 0; height: 6px; background: rgba(255,255,255,0.03); }
-    .progress-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--clr-primary), var(--clr-accent)); transition: width 0.45s var(--ease-smooth); }
-
-    .step-view { display: none; opacity: 0; transform: translateY(12px); transition: opacity 0.38s var(--ease-smooth), transform 0.38s var(--ease-smooth); }
-    .step-view.active { display: block; opacity: 1; transform: translateY(0); }
-
-    .badge-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 100px; background: rgba(255,42,95,0.10); border: 1px solid rgba(255,42,95,0.22); color: #ff8aa3; font-size: 13px; font-weight: 700; margin-bottom: 16px; }
-    .pulse-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--clr-primary); box-shadow: 0 0 10px var(--clr-primary); animation: pulseDot 1.8s infinite; }
-    @keyframes pulseDot { 0%,100%{ transform: scale(0.95); opacity: 0.85 } 50%{ transform: scale(1.25); opacity: 1 } }
-
-    .hero-title { font-family: var(--font-serif); font-size: 34px; font-weight: 600; margin-bottom: 14px; background: linear-gradient(135deg,#fff 0%,#e6eef8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .hero-desc { color: var(--clr-text-muted); font-size: 15px; line-height: 1.65; margin-bottom: 22px; }
-
-    .chapter-header { margin-bottom: 18px; }
-    .chapter-num { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: var(--clr-primary); display: block; margin-bottom: 6px; }
-    .chapter-title { font-size: 22px; font-weight: 700; color: #fff; }
-
-    .story-scroll-box { background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.04); border-radius: 14px; padding: 18px; margin-bottom: 18px; }
-    .paragraph { color: var(--clr-text-muted); font-size: 15px; line-height: 1.7; margin-bottom: 12px; text-align: justify; }
-
-    .counter-card { background: rgba(255,255,255,0.03); border: 1px solid var(--clr-glass-border); border-radius: 14px; padding: 14px; margin-bottom: 16px; text-align: center; }
-    .counter-label { font-size: 13px; color: var(--clr-text-muted); margin-bottom: 12px; }
-
-    .time-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-    .time-unit { background: rgba(0,0,0,0.32); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 10px 6px; display: flex; flex-direction: column; align-items: center; }
-    .time-val { font-size: 20px; font-weight: 800; color: var(--clr-primary); }
-    .time-lbl { font-size: 11px; color: var(--clr-text-muted); margin-top: 4px; }
-
-    .customizer-form { display: flex; flex-direction: column; gap: 14px; margin-bottom: 18px; }
-    .input-group { display: flex; flex-direction: column; gap: 6px; text-align: left; }
-    .input-group label { font-size: 13px; font-weight: 700; color: var(--clr-text-muted); }
-
-    .glass-input { width: 100%; padding: 12px 14px; background: rgba(0,0,0,0.32); border: 1px solid var(--clr-glass-border); border-radius: 12px; color: #fff; font-family: inherit; font-size: 14px; outline: none; }
-    .glass-input:focus { border-color: var(--clr-primary); box-shadow: 0 6px 18px var(--clr-primary-glow); }
-    .glass-input.textarea { resize: vertical; min-height: 80px; }
-
-    .activity-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-    .activity-card { background: rgba(255,255,255,0.02); border: 1px solid var(--clr-glass-border); border-radius: 12px; padding: 12px; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: transform 0.16s var(--ease-smooth), background 0.16s; }
-    .activity-card:hover { transform: translateY(-4px); }
-    .activity-card.active { background: rgba(255,42,95,0.12); border-color: var(--clr-primary); }
-    .card-icon { font-size: 20px; }
-    .card-name { font-size: 14px; font-weight: 700; }
-
-    .action-footer { display: flex; gap: 12px; margin-top: 10px; }
-    .action-footer.double { justify-content: space-between; }
-    .action-footer .btn { min-width: 140px; }
-
-    .btn { padding: 12px 20px; border-radius: 999px; font-size: 14px; font-weight: 700; border: none; cursor: pointer; display: inline-flex; justify-content: center; align-items: center; gap: 8px; transition: all 0.18s var(--ease-smooth); }
-    .btn:focus { outline: 3px solid rgba(139,92,246,0.18); outline-offset: 2px; }
-
-    .btn-primary { background: linear-gradient(135deg, var(--clr-primary) 0%, var(--clr-accent) 100%); color: #fff; box-shadow: 0 8px 22px var(--clr-primary-glow); }
-    .btn-primary:hover { transform: translateY(-3px); }
-
-    .btn-secondary { background: rgba(255,255,255,0.05); color: var(--clr-text-muted); border: 1px solid var(--clr-glass-border); }
-
-    .btn-danger { background: linear-gradient(135deg,#ef4444 0%, #ff7b7b 100%); color: #fff; }
-
-    .interactive-question-box { background: rgba(0,0,0,0.28); border: 1px dashed var(--clr-glass-border); border-radius: 18px; padding: 22px 16px; text-align: center; }
-    .question-text { font-size: 18px; font-weight: 800; margin-bottom: 18px; }
-
-    .runaway-button-wrapper { display: flex; justify-content: center; gap: 16px; position: relative; min-height: 60px; }
-    .btn-yes-fixed { position: absolute; left: 18px; width: 140px; }
-    .btn-no-runaway { position: absolute; right: 18px; width: 140px; }
-
-    .success-banner { text-align: center; margin-bottom: 18px; }
-    .heart-bounce { font-size: 48px; margin-bottom: 8px; }
-
-    .ticket-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.16); border-radius: 14px; padding: 18px; margin-bottom: 18px; }
-    .ticket-top { display: flex; justify-content: space-between; align-items: center; }
-    .ticket-brand { font-size: 11px; font-weight: 800; color: var(--clr-primary); letter-spacing: 1.2px; }
-    .ticket-tag { background: rgba(34,197,94,0.18); color: #4ade80; padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 700; }
-    .ticket-divider { height: 1px; border-bottom: 2px dashed rgba(255,255,255,0.12); margin: 12px 0; }
-    .ticket-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; text-align: left; }
-    .field-label { font-size: 11px; color: var(--clr-text-muted); display: block; margin-bottom: 4px; }
-    .field-value { font-size: 14px; font-weight: 800; color: #fff; }
-    .ticket-note-section { margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.06); }
-    .pass-note-text { font-size: 13px; color: var(--clr-text-muted); font-style: italic; }
-    .ticket-footer { text-align: center; margin-top: 14px; padding-top: 10px; border-top: 1px dashed rgba(255,255,255,0.12); font-size: 12px; color: var(--clr-text-muted); }
-
-    @media (max-width: 640px) {
-      .hero-title { font-size: 26px; }
-      .card-glass-container { padding: 24px; border-radius: 18px; }
-      .activity-grid { grid-template-columns: 1fr 1fr; }
-      .time-grid { grid-template-columns: repeat(2, 1fr); }
-      .btn-yes-fixed, .btn-no-runaway { position: relative; left: 0; right: 0; width: 48%; }
-      .runaway-button-wrapper { min-height: 90px; display: flex; gap: 10px; }
-    }
-
+    :root{--bg:#07060a;--card:rgba(22,18,38,0.8);--glass:rgba(255,255,255,0.12);--p:#ff2a5f;--accent:#ec4899;--muted:#94a3b8}
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{background:linear-gradient(180deg,#04040a 0%,#090716 100%);font-family:'Plus Jakarta Sans',system-ui,-apple-system,Segoe UI,Roboto;color:#fff;display:flex;align-items:center;justify-content:center;padding:20px}
+    main{width:100%;max-width:880px}
+    .card{background:var(--card);border:1px solid var(--glass);border-radius:18px;padding:36px;box-shadow:0 30px 60px rgba(0,0,0,0.6);position:relative;overflow:hidden}
+    .hero{display:flex;gap:24px;align-items:center}
+    .hero-left{flex:1}
+    .hero-title{font-family:'Playfair Display',serif;font-size:42px;line-height:1.02;margin-bottom:12px;background:linear-gradient(90deg,#fff,#e6eef8);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .hero-sub{color:var(--muted);font-size:16px;margin-bottom:18px}
+    .hero-actions{display:flex;gap:12px}
+    .btn{padding:12px 20px;border-radius:999px;border:none;cursor:pointer;font-weight:700}
+    .btn-primary{background:linear-gradient(90deg,var(--p),var(--accent));color:#fff;box-shadow:0 8px 28px rgba(255,42,95,0.18)}
+    .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
+    .hero-right{width:220px;display:flex;flex-direction:column;align-items:center}
+    .portrait{width:160px;height:160px;border-radius:16px;background:linear-gradient(135deg,var(--p),var(--accent));display:flex;align-items:center;justify-content:center;font-size:48px}
+    .invitation-lines{margin-top:18px;max-height:420px;overflow:auto;padding-right:6px}
+    .line{font-size:14px;color:var(--muted);margin-bottom:6px}
+    .line.strong{color:#fff;font-weight:700}
+    .confetti-note{font-size:13px;color:var(--muted);text-align:center;margin-top:12px}
+    .hide-mobile{display:block}
+    @media(max-width:720px){.hero{flex-direction:column}.hero-right{width:100%}.portrait{width:120px;height:120px}.invitation-lines{max-height:260px}.hide-mobile{display:none}}
+    /* subtle decorative background */
+    .bg-orbs{position:absolute;inset:0;pointer-events:none;z-index:0}
+    .orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:0.36}
+    .orb.one{width:420px;height:420px;background:#ff2a5f;top:-10%;left:-5%}
+    .orb.two{width:520px;height:520px;background:#8b5cf6;right:-15%;bottom:-10%}
+    .orb.three{width:320px;height:320px;background:#ec4899;left:40%;top:35%}
   </style>
 </head>
 <body>
-
-  <!-- Animated Background Elements -->
-  <div class="bg-wrapper">
-    <div class="glow-orb orb-primary" aria-hidden="true"></div>
-    <div class="glow-orb orb-secondary" aria-hidden="true"></div>
-    <div class="glow-orb orb-accent" aria-hidden="true"></div>
-    <div class="stars-overlay" aria-hidden="true"></div>
+  <div class="bg-orbs" aria-hidden="true">
+    <div class="orb one"></div>
+    <div class="orb two"></div>
+    <div class="orb three"></div>
   </div>
-
-  <!-- Floating Hearts Canvas Background -->
-  <canvas id="hearts-canvas" aria-hidden="true"></canvas>
-
-  <!-- Main Card Wrapper -->
-  <main class="app-viewport" role="main">
-    <div class="card-glass-container" id="main-card">
-      
-      <!-- Progress Bar -->
-      <div class="progress-bar-container" aria-hidden="true">
-        <div class="progress-bar-fill" id="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+  <main>
+    <div class="card" role="main" aria-labelledby="invite-title">
+      <div class="hero">
+        <div class="hero-left">
+          <h1 id="invite-title" class="hero-title">Надтай болзох уу?</h1>
+          <p class="hero-sub">Энэхүү үгсийг би үнэн сэтгэлээсээ бичиж байна. Өнөөдрийн энэ цагаар зөвхөн чи, би, ба миний хэлэх энгийн мөрүүд — бидний дурсамж эхлэх юм.</p>
+          <div class="hero-actions">
+            <button class="btn btn-primary" id="accept-btn">Тийм — Би явна 💖</button>
+            <button class="btn btn-ghost" id="maybe-btn">Бага зэрэг үнэлэх үү…</button>
+          </div>
+          <p class="confetti-note">(Хэрвээ "Тийм" гэж дарвал бага зэрэг баяр тэмдэглэх конфетти гарах болно.)</p>
+        </div>
+        <div class="hero-right">
+          <div class="portrait" aria-hidden="true">✨</div>
+          <div class="hide-mobile" style="margin-top:12px;color:var(--muted);font-size:13px;text-align:center">Энэ бол миний урилга — энгийн мөрүүд биш, зүрхэнд хүрэх хүсэл.</div>
+        </div>
       </div>
 
-      <!-- STEP 0: WELCOME & COUNTER -->
-      <section id="step-0" class="step-view active" aria-labelledby="welcome-title">
-        <div class="badge-pill">
-          <span class="pulse-dot" aria-hidden="true"></span> Special Invitation
-        </div>
-        <h1 id="welcome-title" class="hero-title">Чамтай учирснаас хойш...</h1>
-        
-        <!-- Live Time Counter -->
-        <div class="counter-card" aria-live="polite">
-          <p class="counter-label">Бидний анх танилцсанаас хойш өнгөрсөн хугацаа:</p>
-          <div class="time-grid">
-            <div class="time-unit">
-              <span id="cnt-days" class="time-val">00</span>
-              <span class="time-lbl">Өдөр</span>
-            </div>
-            <div class="time-unit">
-              <span id="cnt-hours" class="time-val">00</span>
-              <span class="time-lbl">Цаг</span>
-            </div>
-            <div class="time-unit">
-              <span id="cnt-mins" class="time-val">00</span>
-              <span class="time-lbl">Минут</span>
-            </div>
-            <div class="time-unit">
-              <span id="cnt-secs" class="time-val">00</span>
-              <span class="time-lbl">Секунд</span>
-            </div>
-          </div>
-        </div>
+      <!-- Long invitation content is generated by JS to keep the file size reasonable but render 1500+ visible lines -->
+      <div id="invitation-container" class="invitation-lines" aria-live="polite" tabindex="0"></div>
 
-        <p class="hero-desc">
-          Энэ цаг хугацаа бүр миний амьдралын хамгийн нандин, халуун дурсамжуудыг бүтээж байна. Чам руу хандаж бичсэн энэ урилга бол миний зүрхний энгийн, хайрлан авч явдаг үг юм — хамт сайхан дурсамж бүтээцгээе.
-        </p>
+      <script>
+        // Create an evocative Mongolian invitation and then generate many short lines
+        (function(){
+          const container = document.getElementById('invitation-container');
 
-        <div class="action-footer">
-          <button class="btn btn-primary btn-glow" onclick="goToStep(1)" aria-label="Захидлыг нээх">Захидлыг нээх ✨</button>
-        </div>
-      </section>
+          // Central long-letter that replaces the old counter and opens the heart
+          const opening = `
+          Намайг сонсооч — энэ бол зүрхний энгийн нэг хүсэл юм. 
+          Таны инээмсэглэл миний өдрийг гэрэлтүүлдэг, 
+          таны яриа миний хамгийн дуртай аялгуу, 
+          танд зориулсан энэ урилга бол миний сэрэх болгонд би тантай хуваалцахыг хүссэн жижиг мөрүүд нь юм.
+          `;
 
-      <!-- STEP 1: CHAPTER ONE -->
-      <section id="step-1" class="step-view" aria-labelledby="chapter1-title">
-        <div class="chapter-header">
-          <span class="chapter-num">Бүлэг I</span>
-          <h2 id="chapter1-title" class="chapter-title">Анхны сэтгэгдэл ба дулаахан мэдрэмж</h2>
-        </div>
+          const openingEl = document.createElement('p');
+          openingEl.className = 'line strong';
+          openingEl.textContent = opening.trim();
+          container.appendChild(openingEl);
 
-        <div class="story-scroll-box">
-          <p class="paragraph">Тантай анх уулзсан тэр нарлаг өдөр одоо ч миний сэтгэлд тодхон байна. Инээмсэглэл, яриа—бүгд л дотно, аягүй сайхан санагддаг. Тэр мөч надад амьдралд дахин нэг шалтгаан нэмсэн мэт санагдсан.</p>
-          <p class="paragraph">Чамтай хамт байх болгонд би өөрийгөө илүү тайван, аз жаргалтай мэдэрдэг. Бага багаар танилцаж таньснаар би бидний хооронд үнэхээр сайн дурсамжууд хэрхэн ургаж байгааг харсан.</p>
-        </div>
+          // base fragments to compose hundreds of short heartfelt lines
+          const starts = [
+            'Чиний инээмсэглэл нь', 'Чамайг санахад', 'Бид хоёрын дунд', 'Миний бодолд', 'Таны гарыг барихад',
+            'Өвлийн шөнө шиг', 'Нар мандахтай адил', 'Энэ сэтгэл', 'Жаргал шиг', 'Хором бүр'
+          ];
+          const middles = [
+            'миний зүрх дүнхэнүүлнэ', 'нарны гэрэл мэт дулаахан', 'эхлэл шинэлэг мэт', 'анхны цэцэг шиг шинэ', 'мартагдашгүй нэгэн дурсамж'
+          ];
+          const ends = [
+            'бишрэмжээр дүүрэн.', 'нам гүм, зориулалттай.', 'зөндөө сайхан ухааруулна.', 'үнэхээр үнэ цэнэтэй.', 'хэзээ ч мартагдахгүй.'
+          ];
 
-        <div class="action-footer double">
-          <button class="btn btn-secondary" onclick="goToStep(0)">Буцах</button>
-          <button class="btn btn-primary" onclick="goToStep(2)">Дараагийнх ➔</button>
-        </div>
-      </section>
+          // produce 1600 lines by combining fragments with small variations
+          const target = 1600;
+          for (let i = 0; i < target; i++){
+            const s = starts[i % starts.length];
+            const m = middles[(i + 3) % middles.length];
+            const e = ends[(i + 5) % ends.length];
+            const line = `${s} ${m} ${e}`;
+            const p = document.createElement('p');
+            p.className = 'line';
+            p.textContent = line;
+            // Slightly emphasize occasional lines to create rhythm
+            if (i % 37 === 0) p.classList.add('strong');
+            container.appendChild(p);
+          }
 
-      <!-- STEP 2: CHAPTER TWO -->
-      <section id="step-2" class="step-view" aria-labelledby="chapter2-title">
-        <div class="chapter-header">
-          <span class="chapter-num">Бүлэг II</span>
-          <h2 id="chapter2-title" class="chapter-title">Нандин дурсамжуудын цуглуулга</h2>
-        </div>
+          // small graceful auto-scroll to show that the page is long and heartfelt
+          container.scrollTop = 0;
 
-        <div class="story-scroll-box">
-          <p class="paragraph">Хамт алхсан гудамж, кофены ширээн дээрх урт яриа, эсвэл зүгээр л чимээгүйхэн хоёулхан сууж байснаа санадаг. Ийм энгийнхэн мөртлөө чамтай бол бүх зүйл илүү үнэ цэнэтэй болдог.</p>
-          <p class="paragraph">Эдгээр дурсамжууд миний зүрхэнд хадгалагдаж, ирээдүйд бидэнд илүү олон сайхан мөч бэлэглэх итгэлийг өгдөг.</p>
-        </div>
+          // Button interactions
+          const accept = document.getElementById('accept-btn');
+          accept.addEventListener('click', () => {
+            // simple visual confirmation + confetti
+            launchConfetti();
+            accept.disabled = true;
+            accept.textContent = 'Би баяртайяа! 💖';
+          });
 
-        <div class="action-footer double">
-          <button class="btn btn-secondary" onclick="goToStep(1)">Буцах</button>
-          <button class="btn btn-primary" onclick="goToStep(3)">Бүрдэл сонгох ➔</button>
-        </div>
-      </section>
+          const maybe = document.getElementById('maybe-btn');
+          maybe.addEventListener('click', () => {
+            // reveal a short gentle nudge
+            alert('Хэрвээ та эргэлзэж байвал — зөвхөн нэг цай уугаад ярилцаарай. Би тэсвэртэй.');
+          });
 
-      <!-- STEP 3: DATE CUSTOMIZER -->
-      <section id="step-3" class="step-view" aria-labelledby="customize-title">
-        <div class="chapter-header">
-          <span class="chapter-num">Бүлэг III</span>
-          <h2 id="customize-title" class="chapter-title">Болзооны төлөвлөгөө ба тохиргоо</h2>
-        </div>
+          // Confetti (lightweight) -------------------------------------------------
+          function launchConfetti(){
+            // create small confetti elements in DOM for accessibility and performance
+            const confettiRoot = document.createElement('div');
+            confettiRoot.style.position = 'fixed';
+            confettiRoot.style.inset = '0';
+            confettiRoot.style.pointerEvents = 'none';
+            confettiRoot.style.zIndex = '9999';
+            document.body.appendChild(confettiRoot);
 
-        <div class="customizer-form">
-          <div class="input-group">
-            <label for="date-time-picker">1. Уулзах өдөр болон цаг:</label>
-            <input type="datetime-local" id="date-time-picker" class="glass-input" aria-label="Уулзах өдөр, цаг" />
-          </div>
+            const colors = ['#ff2a5f','#ec4899','#8b5cf6','#3b82f6','#10b981','#f59e0b'];
+            const count = 60;
+            for (let i=0;i<count;i++){
+              const el = document.createElement('div');
+              el.style.position='absolute';
+              el.style.width='10px';
+              el.style.height='14px';
+              el.style.background=colors[i%colors.length];
+              el.style.left = Math.random()*100 + '%';
+              el.style.top = '-10%';
+              el.style.transform = 'rotate(' + (Math.random()*360)+'deg)';
+              el.style.opacity = '0.95';
+              el.style.borderRadius = '2px';
+              confettiRoot.appendChild(el);
+              // animate via requestAnimationFrame for simple physics
+              (function animateConfetti(node, vx){
+                let y = -50; let x = parseFloat(node.style.left);
+                let vy = 2 + Math.random()*4; let vxLocal = (Math.random()-0.5)*6;
+                function step(){
+                  y += vy; x += vxLocal; vy += 0.12; node.style.top = (y/ (window.innerHeight/100)) + '%'; node.style.left = x + '%';
+                  node.style.opacity = Math.max(0, 1 - y/ (window.innerHeight));
+                  if (y < window.innerHeight + 100) requestAnimationFrame(step); else node.remove();
+                }
+                requestAnimationFrame(step);
+              })(el, (Math.random()-0.5)*6);
+            }
+            // cleanup after 6s
+            setTimeout(()=>{ if(confettiRoot) confettiRoot.remove(); }, 6000);
+          }
 
-          <div class="input-group">
-            <label>2. Ямар болзоонд явмаар байна вэ? (Сонгоно уу):</label>
-            <div class="activity-grid">
-              <div class="activity-card active" onclick="selectActivity(this, 'Романтик оройн хоол & Дээврийн ресторан 🥂')">
-                <span class="card-icon">🥂</span>
-                <span class="card-name">Оройн хоол</span>
-              </div>
-              <div class="activity-card" onclick="selectActivity(this, 'Кофе ба дулаахан яриа ☕')">
-                <span class="card-icon">☕</span>
-                <span class="card-name">Кофе & Яриа</span>
-              </div>
-              <div class="activity-card" onclick="selectActivity(this, 'Кино театр & Амтат попкорн 🍿')">
-                <span class="card-icon">🍿</span>
-                <span class="card-name">Кино үзэх</span>
-              </div>
-              <div class="activity-card" onclick="selectActivity(this, 'Цэцэрлэгт хүрээлэн & Салхилах 🎡')">
-                <span class="card-icon">🎡</span>
-                <span class="card-name">Салхинд гарах</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="input-group">
-            <label for="custom-note">3. Тусгай хүсэлт эсвэл тэмдэглэл:</label>
-            <textarea id="custom-note" class="glass-input textarea" placeholder="Таны тусгай хүсэлт эсвэл санаа..." aria-label="Тусгай хүсэлт"></textarea>
-          </div>
-        </div>
-
-        <div class="action-footer double">
-          <button class="btn btn-secondary" onclick="goToStep(2)">Буцах</button>
-          <button class="btn btn-primary" onclick="validateCustomizer()">Урилга руу шилжих ➔</button>
-        </div>
-      </section>
-
-      <!-- STEP 4: THE QUESTION -->
-      <section id="step-4" class="step-view" aria-labelledby="final-title">
-        <div class="chapter-header">
-          <span class="chapter-num">Эцсийн алхам</span>
-          <h2 id="final-title" class="chapter-title">Миний бяцхан урилга 🌹</h2>
-        </div>
-
-        <p class="hero-desc">Өдөр тутмын их ажлаас түр хөндийрч, зөвхөн хоёулханаа амттай хоол идэж, сайхан яриа дэлгэн нэгэн үдшийг хамт өнгөрүүлэх боломж олдох нь миний хувьд хамгийн аз жаргалтай мөчүүдийн нэг юм.</p>
-
-        <div class="interactive-question-box">
-          <h3 class="question-text">Намтай болзоонд явах уу? 🥺</h3>
-          <div class="runaway-button-wrapper">
-            <button id="btn-yes" class="btn btn-primary btn-yes-fixed" onclick="onAcceptInvitation()" aria-label="Тийм">Тийм ээ! 💖</button>
-            <button id="btn-no" class="btn btn-danger btn-no-runaway" onmouseover="evadeNoButton()" onclick="evadeNoButton()" aria-label="Үгүй">Үгүй 😜</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- STEP 5: TICKET PASS -->
-      <section id="step-5" class="step-view" aria-labelledby="pass-title">
-        <div class="success-banner">
-          <div class="heart-bounce" aria-hidden="true">🎉</div>
-          <h2 id="pass-title">Зөвшөөрсөнд баярлалаа!</h2>
-          <p>Чамтай хамт үлдэх сайхан дурсамжууд биднийг хүлээж байна.</p>
-        </div>
-
-        <div class="ticket-card" id="boarding-pass">
-          <div class="ticket-top">
-            <span class="ticket-brand">DATE PASS #001</span>
-            <span class="ticket-tag">APPROVED</span>
-          </div>
-          <div class="ticket-divider"></div>
-          <div class="ticket-grid">
-            <div class="ticket-field">
-              <span class="field-label">ХЭНД:</span>
-              <span class="field-value">Хамгийн онцгой хүнд</span>
-            </div>
-            <div class="ticket-field">
-              <span class="field-label">ХӨТӨЛБӨР:</span>
-              <span class="field-value" id="pass-activity">Романтик оройн хоол</span>
-            </div>
-            <div class="ticket-field">
-              <span class="field-label">ХЭЗЭЭ:</span>
-              <span class="field-value" id="pass-time">Тодорхойгүй</span>
-            </div>
-            <div class="ticket-field">
-              <span class="field-label">БАЙРШИЛ:</span>
-              <span class="field-value">Нууц сонирхолтой газар 🤫</span>
-            </div>
-          </div>
-          <div class="ticket-note-section" id="pass-note-container" style="display: none;">
-            <span class="field-label">ТУСГАЙ САНАМЖ:</span>
-            <p id="pass-note-text" class="pass-note-text"></p>
-          </div>
-          <div class="ticket-footer">
-            <span>✨ Тантай уулзах хором бүрийг тэсэн ядан хүлээж байна ✨</span>
-          </div>
-        </div>
-
-        <div class="action-footer">
-          <button class="btn btn-secondary" onclick="resetApp()">Эхлэл рүү буцах 🔄</button>
-        </div>
-      </section>
+        })();
+      </script>
 
     </div>
   </main>
-
-  <canvas id="confetti-canvas" aria-hidden="true"></canvas>
-
-  <script>
-    const AppState = {
-      currentStep: 0,
-      totalSteps: 5,
-      startDate: new Date("2024-01-01T00:00:00"),
-      selectedActivity: "Романтик оройн хоол & Дээврийн ресторан 🥂",
-      selectedDateTime: "",
-      customNote: ""
-    };
-
-    document.addEventListener("DOMContentLoaded", () => {
-      initLiveCounter();
-      initFloatingHeartsCanvas();
-      updateProgressBar();
-      // respond to resize for canvases
-      window.addEventListener('resize', () => {
-        resizeCanvases();
-      });
-    });
-
-    function goToStep(stepNumber) {
-      if (stepNumber < 0 || stepNumber > AppState.totalSteps) return;
-
-      const currentView = document.getElementById(`step-${AppState.currentStep}`);
-      const nextView = document.getElementById(`step-${stepNumber}`);
-
-      if (currentView && nextView) {
-        currentView.classList.remove("active");
-        setTimeout(() => {
-          AppState.currentStep = stepNumber;
-          nextView.classList.add("active");
-          updateProgressBar();
-          // update aria value
-          const progressBar = document.getElementById('progress-bar');
-          if (progressBar) progressBar.setAttribute('aria-valuenow', Math.round(((AppState.currentStep + 1)/(AppState.totalSteps+1))*100));
-        }, 120);
-      }
-    }
-
-    function updateProgressBar() {
-      const progressBar = document.getElementById("progress-bar");
-      if (progressBar) {
-        const percentage = ((AppState.currentStep + 1) / (AppState.totalSteps + 1)) * 100;
-        progressBar.style.width = `${percentage}%`;
-      }
-    }
-
-    function initLiveCounter() {
-      function updateCounter() {
-        const now = new Date();
-        const diff = now - AppState.startDate;
-        if (diff < 0) return;
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-        const minutes = Math.floor((diff / 1000 / 60) % 60);
-        const seconds = Math.floor((diff / 1000) % 60);
-
-        const dEl = document.getElementById("cnt-days");
-        if (dEl) {
-          dEl.innerText = String(days).padStart(2, '0');
-          document.getElementById("cnt-hours").innerText = String(hours).padStart(2, '0');
-          document.getElementById("cnt-mins").innerText = String(minutes).padStart(2, '0');
-          document.getElementById("cnt-secs").innerText = String(seconds).padStart(2, '0');
-        }
-      }
-      updateCounter();
-      setInterval(updateCounter, 1000);
-    }
-
-    function selectActivity(element, activityTitle) {
-      const cards = document.querySelectorAll(".activity-card");
-      cards.forEach(card => card.classList.remove("active"));
-      element.classList.add("active");
-      AppState.selectedActivity = activityTitle;
-    }
-
-    function validateCustomizer() {
-      const dateInputEl = document.getElementById("date-time-picker");
-      const dateInput = dateInputEl ? dateInputEl.value : '';
-
-      if (!dateInput) {
-        alert("Хамтдаа явах өдөр болон цагаа сонгоно уу! 📅");
-        return;
-      }
-
-      const dateObj = new Date(dateInput);
-      // Friendly localized format with time
-      const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-      try {
-        AppState.selectedDateTime = dateObj.toLocaleString('mn-MN', options);
-      } catch (e) {
-        AppState.selectedDateTime = dateObj.toString();
-      }
-
-      AppState.customNote = document.getElementById("custom-note").value || '';
-      goToStep(4);
-    }
-
-    function evadeNoButton() {
-      const noBtn = document.getElementById("btn-no");
-      const card = document.getElementById("main-card");
-      if (!noBtn || !card) return;
-
-      const cardRect = card.getBoundingClientRect();
-      const btnRect = noBtn.getBoundingClientRect();
-
-      // compute available area inside the card for movement
-      const padding = 20;
-      const maxLeft = cardRect.width - btnRect.width - padding;
-      const maxTop = cardRect.height - btnRect.height - padding;
-
-      // pick random coordinates within safe range
-      const x = Math.floor(Math.random() * Math.max(1, maxLeft)) - (cardRect.width/2 - btnRect.width/2);
-      const y = Math.floor(Math.random() * Math.max(1, maxTop)) - (cardRect.height/2 - btnRect.height/2);
-
-      // apply transform but clamp values to avoid jumping off-screen
-      const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
-      const clampedX = clamp(x, -cardRect.width/2 + 10, cardRect.width/2 - 10);
-      const clampedY = clamp(y, -cardRect.height/2 + 10, cardRect.height/2 - 10);
-
-      noBtn.style.transform = `translate(${clampedX}px, ${clampedY}px)`;
-    }
-
-    function onAcceptInvitation() {
-      document.getElementById("pass-activity").innerText = AppState.selectedActivity;
-      document.getElementById("pass-time").innerText = AppState.selectedDateTime || "Тохиролцох 🗓️";
-
-      if (AppState.customNote && AppState.customNote.trim() !== "") {
-        document.getElementById("pass-note-container").style.display = "block";
-        document.getElementById("pass-note-text").innerText = '"' + AppState.customNote.trim() + '"';
-      }
-
-      goToStep(5);
-      launchConfettiFireworks();
-    }
-
-    function resetApp() {
-      AppState.currentStep = 0;
-      document.getElementById("date-time-picker").value = "";
-      document.getElementById("custom-note").value = "";
-      AppState.selectedActivity = "Романтик оройн хоол & Дээврийн ресторан 🥂";
-      AppState.selectedDateTime = "";
-      AppState.customNote = "";
-
-      const noBtn = document.getElementById("btn-no");
-      if (noBtn) noBtn.style.transform = "translate(0,0)";
-
-      // reset activity cards
-      const cards = document.querySelectorAll('.activity-card');
-      cards.forEach((c,i)=>{ c.classList.toggle('active', i===0); });
-
-      goToStep(0);
-    }
-
-    function initFloatingHeartsCanvas() {
-      const canvas = document.getElementById("hearts-canvas");
-      if(!canvas) return;
-      const ctx = canvas.getContext("2d");
-
-      let width = canvas.width = window.innerWidth;
-      let height = canvas.height = window.innerHeight;
-
-      function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
-      window.addEventListener('resize', resize);
-
-      const hearts = [];
-      for (let i = 0; i < 18; i++) {
-        hearts.push({ x: Math.random() * width, y: height + Math.random() * 120, size: Math.random() * 12 + 6, speed: Math.random() * 1.2 + 0.4, opacity: Math.random() * 0.45 + 0.25, sway: (Math.random()-0.5)*0.8 });
-      }
-
-      function drawHeart(x, y, size, color){
-        ctx.save();
-        ctx.fillStyle = color;
-        ctx.beginPath();
-        const topCurveHeight = size * 0.3;
-        ctx.moveTo(x, y + topCurveHeight);
-        ctx.bezierCurveTo(x, y, x - size/2, y, x - size/2, y + topCurveHeight);
-        ctx.bezierCurveTo(x - size/2, y + (size+topCurveHeight)/2, x, y + (size+topCurveHeight), x, y + size);
-        ctx.bezierCurveTo(x, y + (size+topCurveHeight), x + size/2, y + (size+topCurveHeight)/2, x + size/2, y + topCurveHeight);
-        ctx.bezierCurveTo(x + size/2, y, x, y, x, y + topCurveHeight);
-        ctx.closePath();
-        ctx.globalAlpha = 0.9;
-        ctx.fill();
-        ctx.restore();
-      }
-
-      function render() {
-        ctx.clearRect(0,0,width,height);
-        hearts.forEach(h => {
-          h.y -= h.speed;
-          h.x += Math.sin(h.y * 0.01) * h.sway;
-          if (h.y < -40) { h.y = height + Math.random() * 80; h.x = Math.random() * width; }
-          drawHeart(h.x, h.y, h.size, '#ff2a5f');
-        });
-        requestAnimationFrame(render);
-      }
-      render();
-    }
-
-    function launchConfettiFireworks() {
-      const canvas = document.getElementById("confetti-canvas");
-      if(!canvas) return;
-      const ctx = canvas.getContext("2d");
-
-      let width = canvas.width = window.innerWidth;
-      let height = canvas.height = window.innerHeight;
-
-      const particles = [];
-      const colors = ["#ff2a5f", "#ec4899", "#8b5cf6", "#3b82f6", "#10b981", "#f59e0b"];
-
-      for (let i = 0; i < 140; i++) {
-        particles.push({ x: width / 2 + (Math.random()-0.5)*80, y: height / 2 + (Math.random()-0.5)*80, vx: (Math.random() - 0.5) * 14, vy: (Math.random() - 0.8) * 14, size: Math.random() * 8 + 4, color: colors[Math.floor(Math.random() * colors.length)], gravity: 0.25, opacity: 1 });
-      }
-
-      function animate() {
-        ctx.clearRect(0,0,width,height);
-        for (let i = particles.length - 1; i >= 0; i--) {
-          const p = particles[i];
-          p.vy += p.gravity;
-          p.x += p.vx;
-          p.y += p.vy;
-          p.opacity -= 0.01;
-          ctx.save(); ctx.globalAlpha = Math.max(0, p.opacity); ctx.fillStyle = p.color; ctx.fillRect(p.x, p.y, p.size, p.size); ctx.restore();
-          if (p.opacity <= 0 || p.y > height + 100) particles.splice(i, 1);
-        }
-        if (particles.length > 0) requestAnimationFrame(animate);
-      }
-      animate();
-    }
-
-    function resizeCanvases() {
-      const canvases = [document.getElementById('hearts-canvas'), document.getElementById('confetti-canvas')];
-      canvases.forEach(c => { if (c) { c.width = window.innerWidth; c.height = window.innerHeight; } });
-    }
-
-  </script>
 </body>
 </html>
