@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Онцгой урилга — хайртай хүнд зориулсан интерактив урилга">
   <title>Онцгой Урилга ✨</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,7 +15,7 @@
       --clr-glass-border: rgba(255, 255, 255, 0.12);
       --clr-glass-border-hover: rgba(255, 255, 255, 0.25);
       --clr-primary: #ff2a5f;
-      --clr-primary-glow: rgba(255, 42, 95, 0.4);
+      --clr-primary-glow: rgba(255, 42, 95, 0.35);
       --clr-secondary: #8b5cf6;
       --clr-accent: #ec4899;
       --clr-text-main: #f8fafc;
@@ -22,13 +23,12 @@
       --font-sans: 'Plus Jakarta Sans', sans-serif;
       --font-serif: 'Playfair Display', Georgia, serif;
       --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+      --card-max-width: 720px;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body { height: 100%; }
 
     body {
       background-color: var(--clr-bg-dark);
@@ -41,364 +41,160 @@
       padding: 20px;
       position: relative;
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
-    .bg-wrapper {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-    }
+    .bg-wrapper { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
 
-    .glow-orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(100px);
-      opacity: 0.45;
-      animation: floatAnimation 18s ease-in-out infinite alternate;
-    }
+    .glow-orb { position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.45; animation: floatAnimation 18s ease-in-out infinite alternate; }
+    .orb-primary { width: 420px; height: 420px; background: var(--clr-primary); top: -8%; left: -6%; }
+    .orb-secondary { width: 520px; height: 520px; background: var(--clr-secondary); bottom: -14%; right: -8%; animation-delay: -6s; }
+    .orb-accent { width: 320px; height: 320px; background: var(--clr-accent); top: 40%; left: 40%; animation-delay: -12s; }
 
-    .orb-primary {
-      width: 450px;
-      height: 450px;
-      background: var(--clr-primary);
-      top: -10%;
-      left: -5%;
-    }
+    @keyframes floatAnimation { 0% { transform: translate(0, 0) scale(1); } 50% { transform: translate(60px, 40px) scale(1.06); } 100% { transform: translate(-40px, 80px) scale(0.98); } }
 
-    .orb-secondary {
-      width: 550px;
-      height: 550px;
-      background: var(--clr-secondary);
-      bottom: -15%;
-      right: -10%;
-      animation-delay: -6s;
-    }
+    .stars-overlay { position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,0.15) 1px, transparent 0); background-size: 28px 28px; opacity: 0.25; }
 
-    .orb-accent {
-      width: 350px;
-      height: 350px;
-      background: var(--clr-accent);
-      top: 40%;
-      left: 40%;
-      animation-delay: -12s;
-    }
-
-    @keyframes floatAnimation {
-      0% { transform: translate(0, 0) scale(1); }
-      50% { transform: translate(60px, 40px) scale(1.1); }
-      100% { transform: translate(-40px, 80px) scale(0.95); }
-    }
-
-    .stars-overlay {
-      position: absolute;
-      inset: 0;
-      background-image: radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 0);
-      background-size: 24px 24px;
-      opacity: 0.3;
-    }
-
-    #hearts-canvas, #confetti-canvas {
-      position: fixed;
-      inset: 0;
-      width: 100vw;
-      height: 100vh;
-      pointer-events: none;
-    }
-
+    canvas { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; }
     #hearts-canvas { z-index: 1; }
-    #confetti-canvas { z-index: 100; }
+    #confetti-canvas { z-index: 150; }
 
-    .app-viewport {
-      position: relative;
-      z-index: 10;
-      width: 100%;
-      max-width: 540px;
-      margin: auto;
-    }
+    .app-viewport { position: relative; z-index: 10; width: 100%; max-width: var(--card-max-width); margin: auto; padding: 12px; }
 
     .card-glass-container {
-      background: var(--clr-bg-card);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
       border: 1px solid var(--clr-glass-border);
-      border-radius: 32px;
-      padding: 40px 32px;
-      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+      border-radius: 28px;
+      padding: 36px 28px;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.55);
       position: relative;
       overflow: hidden;
     }
 
-    .progress-bar-container {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 5px;
-      background: rgba(255, 255, 255, 0.05);
-    }
+    .progress-bar-container { position: absolute; top: 0; left: 0; right: 0; height: 6px; background: rgba(255,255,255,0.03); }
+    .progress-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--clr-primary), var(--clr-accent)); transition: width 0.45s var(--ease-smooth); }
 
-    .progress-bar-fill {
-      height: 100%;
-      width: 16.6%;
-      background: linear-gradient(90deg, var(--clr-primary), var(--clr-accent));
-      transition: width 0.5s var(--ease-smooth);
-    }
+    .step-view { display: none; opacity: 0; transform: translateY(12px); transition: opacity 0.38s var(--ease-smooth), transform 0.38s var(--ease-smooth); }
+    .step-view.active { display: block; opacity: 1; transform: translateY(0); }
 
-    .step-view {
-      display: none;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.4s var(--ease-smooth), transform 0.4s var(--ease-smooth);
-    }
+    .badge-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 100px; background: rgba(255,42,95,0.10); border: 1px solid rgba(255,42,95,0.22); color: #ff8aa3; font-size: 13px; font-weight: 700; margin-bottom: 16px; }
+    .pulse-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--clr-primary); box-shadow: 0 0 10px var(--clr-primary); animation: pulseDot 1.8s infinite; }
+    @keyframes pulseDot { 0%,100%{ transform: scale(0.95); opacity: 0.85 } 50%{ transform: scale(1.25); opacity: 1 } }
 
-    .step-view.active {
-      display: block;
-      opacity: 1;
-      transform: translateY(0);
-    }
+    .hero-title { font-family: var(--font-serif); font-size: 34px; font-weight: 600; margin-bottom: 14px; background: linear-gradient(135deg,#fff 0%,#e6eef8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero-desc { color: var(--clr-text-muted); font-size: 15px; line-height: 1.65; margin-bottom: 22px; }
 
-    .badge-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 16px;
-      border-radius: 100px;
-      background: rgba(255, 42, 95, 0.12);
-      border: 1px solid rgba(255, 42, 95, 0.3);
-      color: #ff6b8b;
-      font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 16px;
-    }
-
-    .pulse-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--clr-primary);
-      box-shadow: 0 0 10px var(--clr-primary);
-      animation: pulseDot 1.8s infinite;
-    }
-
-    @keyframes pulseDot {
-      0%, 100% { transform: scale(0.95); opacity: 0.8; }
-      50% { transform: scale(1.3); opacity: 1; }
-    }
-
-    .hero-title {
-      font-family: var(--font-serif);
-      font-size: 32px;
-      font-weight: 600;
-      margin-bottom: 16px;
-      background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .hero-desc {
-      color: var(--clr-text-muted);
-      font-size: 15px;
-      line-height: 1.65;
-      margin-bottom: 24px;
-    }
-
-    .chapter-header { margin-bottom: 20px; }
-    .chapter-num {
-      font-size: 12px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      color: var(--clr-primary);
-      display: block;
-      margin-bottom: 4px;
-    }
+    .chapter-header { margin-bottom: 18px; }
+    .chapter-num { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: var(--clr-primary); display: block; margin-bottom: 6px; }
     .chapter-title { font-size: 22px; font-weight: 700; color: #fff; }
 
-    .story-scroll-box {
-      background: rgba(0, 0, 0, 0.25);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: 18px;
-      padding: 20px;
-      margin-bottom: 24px;
-    }
+    .story-scroll-box { background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.04); border-radius: 14px; padding: 18px; margin-bottom: 18px; }
+    .paragraph { color: var(--clr-text-muted); font-size: 15px; line-height: 1.7; margin-bottom: 12px; text-align: justify; }
 
-    .paragraph {
-      color: var(--clr-text-muted);
-      font-size: 14.5px;
-      line-height: 1.7;
-      margin-bottom: 12px;
-      text-align: justify;
-    }
-    .paragraph:last-child { margin-bottom: 0; }
+    .counter-card { background: rgba(255,255,255,0.03); border: 1px solid var(--clr-glass-border); border-radius: 14px; padding: 14px; margin-bottom: 16px; text-align: center; }
+    .counter-label { font-size: 13px; color: var(--clr-text-muted); margin-bottom: 12px; }
 
-    .counter-card {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--clr-glass-border);
-      border-radius: 18px;
-      padding: 18px;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-    .counter-label { font-size: 12.5px; color: var(--clr-text-muted); margin-bottom: 12px; }
-
-    .time-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-    }
-    .time-unit {
-      background: rgba(0, 0, 0, 0.3);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 12px;
-      padding: 8px 4px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+    .time-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    .time-unit { background: rgba(0,0,0,0.32); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 10px 6px; display: flex; flex-direction: column; align-items: center; }
     .time-val { font-size: 20px; font-weight: 800; color: var(--clr-primary); }
-    .time-lbl { font-size: 10px; color: var(--clr-text-muted); margin-top: 2px; }
+    .time-lbl { font-size: 11px; color: var(--clr-text-muted); margin-top: 4px; }
 
-    .customizer-form { display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px; }
-    .input-group { display: flex; flex-direction: column; gap: 8px; text-align: left; }
-    .input-group label { font-size: 13.5px; font-weight: 600; color: var(--clr-text-muted); }
+    .customizer-form { display: flex; flex-direction: column; gap: 14px; margin-bottom: 18px; }
+    .input-group { display: flex; flex-direction: column; gap: 6px; text-align: left; }
+    .input-group label { font-size: 13px; font-weight: 700; color: var(--clr-text-muted); }
 
-    .glass-input {
-      width: 100%;
-      padding: 12px 16px;
-      background: rgba(0, 0, 0, 0.3);
-      border: 1px solid var(--clr-glass-border);
-      border-radius: 14px;
-      color: #fff;
-      font-family: inherit;
-      font-size: 14px;
-      outline: none;
-    }
-    .glass-input:focus { border-color: var(--clr-primary); }
-    .glass-input.textarea { resize: vertical; min-height: 70px; }
+    .glass-input { width: 100%; padding: 12px 14px; background: rgba(0,0,0,0.32); border: 1px solid var(--clr-glass-border); border-radius: 12px; color: #fff; font-family: inherit; font-size: 14px; outline: none; }
+    .glass-input:focus { border-color: var(--clr-primary); box-shadow: 0 6px 18px var(--clr-primary-glow); }
+    .glass-input.textarea { resize: vertical; min-height: 80px; }
 
     .activity-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-    .activity-card {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--clr-glass-border);
-      border-radius: 14px;
-      padding: 12px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .activity-card.active {
-      background: rgba(255, 42, 95, 0.15);
-      border-color: var(--clr-primary);
-    }
-    .card-icon { font-size: 22px; }
-    .card-name { font-size: 13px; font-weight: 600; }
+    .activity-card { background: rgba(255,255,255,0.02); border: 1px solid var(--clr-glass-border); border-radius: 12px; padding: 12px; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: transform 0.16s var(--ease-smooth), background 0.16s; }
+    .activity-card:hover { transform: translateY(-4px); }
+    .activity-card.active { background: rgba(255,42,95,0.12); border-color: var(--clr-primary); }
+    .card-icon { font-size: 20px; }
+    .card-name { font-size: 14px; font-weight: 700; }
 
     .action-footer { display: flex; gap: 12px; margin-top: 10px; }
-    .action-footer.double .btn { flex: 1; }
+    .action-footer.double { justify-content: space-between; }
+    .action-footer .btn { min-width: 140px; }
 
-    .btn {
-      padding: 14px 28px;
-      border-radius: 100px;
-      font-size: 14.5px;
-      font-weight: 700;
-      border: none;
-      cursor: pointer;
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.2s ease;
-    }
+    .btn { padding: 12px 20px; border-radius: 999px; font-size: 14px; font-weight: 700; border: none; cursor: pointer; display: inline-flex; justify-content: center; align-items: center; gap: 8px; transition: all 0.18s var(--ease-smooth); }
+    .btn:focus { outline: 3px solid rgba(139,92,246,0.18); outline-offset: 2px; }
 
-    .btn-primary {
-      background: linear-gradient(135deg, var(--clr-primary) 0%, var(--clr-accent) 100%);
-      color: #fff;
-      box-shadow: 0 8px 20px var(--clr-primary-glow);
-    }
-    .btn-primary:hover { transform: translateY(-2px); }
+    .btn-primary { background: linear-gradient(135deg, var(--clr-primary) 0%, var(--clr-accent) 100%); color: #fff; box-shadow: 0 8px 22px var(--clr-primary-glow); }
+    .btn-primary:hover { transform: translateY(-3px); }
 
-    .btn-secondary {
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--clr-text-muted);
-      border: 1px solid var(--clr-glass-border);
-    }
+    .btn-secondary { background: rgba(255,255,255,0.05); color: var(--clr-text-muted); border: 1px solid var(--clr-glass-border); }
 
-    .interactive-question-box {
-      background: rgba(0, 0, 0, 0.3);
-      border: 1px dashed var(--clr-glass-border);
-      border-radius: 20px;
-      padding: 24px 16px;
-      text-align: center;
-    }
-    .question-text { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
+    .btn-danger { background: linear-gradient(135deg,#ef4444 0%, #ff7b7b 100%); color: #fff; }
 
-    .runaway-button-wrapper {
-      display: flex;
-      justify-content: center;
-      gap: 16px;
-      position: relative;
-      min-height: 50px;
-    }
+    .interactive-question-box { background: rgba(0,0,0,0.28); border: 1px dashed var(--clr-glass-border); border-radius: 18px; padding: 22px 16px; text-align: center; }
+    .question-text { font-size: 18px; font-weight: 800; margin-bottom: 18px; }
 
-    .btn-yes-fixed { position: absolute; left: 20px; width: 120px; }
-    .btn-no-runaway { position: absolute; right: 20px; width: 120px; background: rgba(255,255,255,0.15); color: #fff; }
+    .runaway-button-wrapper { display: flex; justify-content: center; gap: 16px; position: relative; min-height: 60px; }
+    .btn-yes-fixed { position: absolute; left: 18px; width: 140px; }
+    .btn-no-runaway { position: absolute; right: 18px; width: 140px; }
 
-    .success-banner { text-align: center; margin-bottom: 20px; }
+    .success-banner { text-align: center; margin-bottom: 18px; }
     .heart-bounce { font-size: 48px; margin-bottom: 8px; }
 
-    .ticket-card {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      border-radius: 20px;
-      padding: 20px;
-      margin-bottom: 24px;
-    }
+    .ticket-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.16); border-radius: 14px; padding: 18px; margin-bottom: 18px; }
     .ticket-top { display: flex; justify-content: space-between; align-items: center; }
-    .ticket-brand { font-size: 11px; font-weight: 800; color: var(--clr-primary); letter-spacing: 1.5px; }
-    .ticket-tag { background: rgba(34, 197, 94, 0.2); color: #4ade80; padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 700; }
-    .ticket-divider { height: 1px; border-bottom: 2px dashed rgba(255,255,255,0.15); margin: 12px 0; }
+    .ticket-brand { font-size: 11px; font-weight: 800; color: var(--clr-primary); letter-spacing: 1.2px; }
+    .ticket-tag { background: rgba(34,197,94,0.18); color: #4ade80; padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 700; }
+    .ticket-divider { height: 1px; border-bottom: 2px dashed rgba(255,255,255,0.12); margin: 12px 0; }
     .ticket-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; text-align: left; }
-    .field-label { font-size: 10.5px; color: var(--clr-text-muted); display: block; margin-bottom: 2px; }
-    .field-value { font-size: 13px; font-weight: 700; color: #fff; }
-    .ticket-note-section { margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.08); text-align: left; }
-    .pass-note-text { font-size: 12px; color: var(--clr-text-muted); font-style: italic; }
-    .ticket-footer { text-align: center; margin-top: 14px; padding-top: 10px; border-top: 1px dashed rgba(255,255,255,0.15); font-size: 11px; color: var(--clr-text-muted); }
+    .field-label { font-size: 11px; color: var(--clr-text-muted); display: block; margin-bottom: 4px; }
+    .field-value { font-size: 14px; font-weight: 800; color: #fff; }
+    .ticket-note-section { margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.06); }
+    .pass-note-text { font-size: 13px; color: var(--clr-text-muted); font-style: italic; }
+    .ticket-footer { text-align: center; margin-top: 14px; padding-top: 10px; border-top: 1px dashed rgba(255,255,255,0.12); font-size: 12px; color: var(--clr-text-muted); }
+
+    @media (max-width: 640px) {
+      .hero-title { font-size: 26px; }
+      .card-glass-container { padding: 24px; border-radius: 18px; }
+      .activity-grid { grid-template-columns: 1fr 1fr; }
+      .time-grid { grid-template-columns: repeat(2, 1fr); }
+      .btn-yes-fixed, .btn-no-runaway { position: relative; left: 0; right: 0; width: 48%; }
+      .runaway-button-wrapper { min-height: 90px; display: flex; gap: 10px; }
+    }
+
   </style>
 </head>
 <body>
 
   <!-- Animated Background Elements -->
   <div class="bg-wrapper">
-    <div class="glow-orb orb-primary"></div>
-    <div class="glow-orb orb-secondary"></div>
-    <div class="glow-orb orb-accent"></div>
-    <div class="stars-overlay"></div>
+    <div class="glow-orb orb-primary" aria-hidden="true"></div>
+    <div class="glow-orb orb-secondary" aria-hidden="true"></div>
+    <div class="glow-orb orb-accent" aria-hidden="true"></div>
+    <div class="stars-overlay" aria-hidden="true"></div>
   </div>
 
   <!-- Floating Hearts Canvas Background -->
-  <canvas id="hearts-canvas"></canvas>
+  <canvas id="hearts-canvas" aria-hidden="true"></canvas>
 
   <!-- Main Card Wrapper -->
-  <main class="app-viewport">
+  <main class="app-viewport" role="main">
     <div class="card-glass-container" id="main-card">
       
       <!-- Progress Bar -->
-      <div class="progress-bar-container">
-        <div class="progress-bar-fill" id="progress-bar"></div>
+      <div class="progress-bar-container" aria-hidden="true">
+        <div class="progress-bar-fill" id="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
       </div>
 
       <!-- STEP 0: WELCOME & COUNTER -->
-      <section id="step-0" class="step-view active">
+      <section id="step-0" class="step-view active" aria-labelledby="welcome-title">
         <div class="badge-pill">
-          <span class="pulse-dot"></span> Special Invitation
+          <span class="pulse-dot" aria-hidden="true"></span> Special Invitation
         </div>
-        <h1 class="hero-title">Чамтай учирснаас хойш...</h1>
+        <h1 id="welcome-title" class="hero-title">Чамтай учирснаас хойш...</h1>
         
         <!-- Live Time Counter -->
-        <div class="counter-card">
+        <div class="counter-card" aria-live="polite">
           <p class="counter-label">Бидний анх танилцсанаас хойш өнгөрсөн хугацаа:</p>
           <div class="time-grid">
             <div class="time-unit">
@@ -421,30 +217,24 @@
         </div>
 
         <p class="hero-desc">
-          Энэ цаг хугацаа бүхэн миний амьдралын хамгийн нандин дурсамжуудыг бүтээж байна. Чамд зориулж бэлдсэн бяцхан урилгыг минь нээж үзээрэй.
+          Энэ цаг хугацаа бүр миний амьдралын хамгийн нандин, халуун дурсамжуудыг бүтээж байна. Чам руу хандаж бичсэн энэ урилга бол миний зүрхний энгийн, хайрлан авч явдаг үг юм — хамт сайхан дурсамж бүтээцгээе.
         </p>
 
         <div class="action-footer">
-          <button class="btn btn-primary btn-glow" onclick="goToStep(1)">
-            <span>Захидлыг нээх ✨</span>
-          </button>
+          <button class="btn btn-primary btn-glow" onclick="goToStep(1)" aria-label="Захидлыг нээх">Захидлыг нээх ✨</button>
         </div>
       </section>
 
       <!-- STEP 1: CHAPTER ONE -->
-      <section id="step-1" class="step-view">
+      <section id="step-1" class="step-view" aria-labelledby="chapter1-title">
         <div class="chapter-header">
           <span class="chapter-num">Бүлэг I</span>
-          <h2 class="chapter-title">Анхны сэтгэгдэл ба Дулаахан мэдрэмж</h2>
+          <h2 id="chapter1-title" class="chapter-title">Анхны сэтгэгдэл ба дулаахан мэдрэмж</h2>
         </div>
 
         <div class="story-scroll-box">
-          <p class="paragraph">
-            Тантай анх уулзсан тэр нэгэн саруулхан өдрийг одоо хүртэл тод санаж байна. Амьдралын минь энгийн нэгэн хуудас байж болох байсан ч, чиний инээмсэглэл болон дулаахан яриа бүх зүйлийг өөрчилсөн.
-          </p>
-          <p class="paragraph">
-            Чамтай хамт байхад цаг хугацаа ямар хурдан өнгөрдгийг, бас чамайг эчнээ хайрлах мэдрэмж сэтгэлийг минь хэрхэн дүүргэдгийг анзаарсан юм.
-          </p>
+          <p class="paragraph">Тантай анх уулзсан тэр нарлаг өдөр одоо ч миний сэтгэлд тодхон байна. Инээмсэглэл, яриа—бүгд л дотно, аягүй сайхан санагддаг. Тэр мөч надад амьдралд дахин нэг шалтгаан нэмсэн мэт санагдсан.</p>
+          <p class="paragraph">Чамтай хамт байх болгонд би өөрийгөө илүү тайван, аз жаргалтай мэдэрдэг. Бага багаар танилцаж таньснаар би бидний хооронд үнэхээр сайн дурсамжууд хэрхэн ургаж байгааг харсан.</p>
         </div>
 
         <div class="action-footer double">
@@ -454,19 +244,15 @@
       </section>
 
       <!-- STEP 2: CHAPTER TWO -->
-      <section id="step-2" class="step-view">
+      <section id="step-2" class="step-view" aria-labelledby="chapter2-title">
         <div class="chapter-header">
           <span class="chapter-num">Бүлэг II</span>
-          <h2 class="chapter-title">Нандин дурсамжуудын цуглуулга</h2>
+          <h2 id="chapter2-title" class="chapter-title">Нандин дурсамжуудын цуглуулга</h2>
         </div>
 
         <div class="story-scroll-box">
-          <p class="paragraph">
-            Хамтдаа алхсан гудамж, тухтай суун ярилцсан кофены мухар, эсвэл зүгээр л чимээгүй бие биенээ ширтэн суусан мөч бүхэн миний хувьд үнэт эрдэнэ мэт.
-          </p>
-          <p class="paragraph">
-            Би чамтай хамт байхдаа л хамгийн өөрийнхөөрөө, ямар ч баггүйгээр чин сэтгэлээсээ жаргалтай байж чаддаг. Тиймээс энэ нандин дурсамжууддаа дахин нэг шинэ хуудас нэмэхийг хүсэж байна.
-          </p>
+          <p class="paragraph">Хамт алхсан гудамж, кофены ширээн дээрх урт яриа, эсвэл зүгээр л чимээгүйхэн хоёулхан сууж байснаа санадаг. Ийм энгийнхэн мөртлөө чамтай бол бүх зүйл илүү үнэ цэнэтэй болдог.</p>
+          <p class="paragraph">Эдгээр дурсамжууд миний зүрхэнд хадгалагдаж, ирээдүйд бидэнд илүү олон сайхан мөч бэлэглэх итгэлийг өгдөг.</p>
         </div>
 
         <div class="action-footer double">
@@ -476,16 +262,16 @@
       </section>
 
       <!-- STEP 3: DATE CUSTOMIZER -->
-      <section id="step-3" class="step-view">
+      <section id="step-3" class="step-view" aria-labelledby="customize-title">
         <div class="chapter-header">
           <span class="chapter-num">Бүлэг III</span>
-          <h2 class="chapter-title">Болзооны төлөвлөгөө ба тохиргоо</h2>
+          <h2 id="customize-title" class="chapter-title">Болзооны төлөвлөгөө ба тохиргоо</h2>
         </div>
 
         <div class="customizer-form">
           <div class="input-group">
             <label for="date-time-picker">1. Уулзах өдөр болон цаг:</label>
-            <input type="datetime-local" id="date-time-picker" class="glass-input" />
+            <input type="datetime-local" id="date-time-picker" class="glass-input" aria-label="Уулзах өдөр, цаг" />
           </div>
 
           <div class="input-group">
@@ -495,7 +281,7 @@
                 <span class="card-icon">🥂</span>
                 <span class="card-name">Оройн хоол</span>
               </div>
-              <div class="activity-card" onclick="selectActivity(this, 'Кофены тухтай соёл & Сэтгэлийн яриа ☕')">
+              <div class="activity-card" onclick="selectActivity(this, 'Кофе ба дулаахан яриа ☕')">
                 <span class="card-icon">☕</span>
                 <span class="card-name">Кофе & Яриа</span>
               </div>
@@ -503,7 +289,7 @@
                 <span class="card-icon">🍿</span>
                 <span class="card-name">Кино үзэх</span>
               </div>
-              <div class="activity-card" onclick="selectActivity(this, 'Цэцэрлэгт хүрээлэн & Байгальд салхилах 🎡')">
+              <div class="activity-card" onclick="selectActivity(this, 'Цэцэрлэгт хүрээлэн & Салхилах 🎡')">
                 <span class="card-icon">🎡</span>
                 <span class="card-name">Салхинд гарах</span>
               </div>
@@ -511,8 +297,8 @@
           </div>
 
           <div class="input-group">
-            <label for="custom-note">3. Надад дамжуулах тусгай хүсэлт оруулах:</label>
-            <textarea id="custom-note" class="glass-input textarea" placeholder="Таны тусгай хүсэлт эсвэл санаа..."></textarea>
+            <label for="custom-note">3. Тусгай хүсэлт эсвэл тэмдэглэл:</label>
+            <textarea id="custom-note" class="glass-input textarea" placeholder="Таны тусгай хүсэлт эсвэл санаа..." aria-label="Тусгай хүсэлт"></textarea>
           </div>
         </div>
 
@@ -523,35 +309,29 @@
       </section>
 
       <!-- STEP 4: THE QUESTION -->
-      <section id="step-4" class="step-view">
+      <section id="step-4" class="step-view" aria-labelledby="final-title">
         <div class="chapter-header">
           <span class="chapter-num">Эцсийн алхам</span>
-          <h2 class="chapter-title">Миний бяцхан урилга 🌹</h2>
+          <h2 id="final-title" class="chapter-title">Миний бяцхан урилга 🌹</h2>
         </div>
 
-        <p class="hero-desc">
-          Өдөр тутмын их ажлаас түр хөндийрч, зөвхөн хоёулханаа амттай хоол идэж, сайхан яриа дэлгэн нэгэн үдшийг маргашгүй өнгөрүүлбэл ямар вэ?
-        </p>
+        <p class="hero-desc">Өдөр тутмын их ажлаас түр хөндийрч, зөвхөн хоёулханаа амттай хоол идэж, сайхан яриа дэлгэн нэгэн үдшийг хамт өнгөрүүлэх боломж олдох нь миний хувьд хамгийн аз жаргалтай мөчүүдийн нэг юм.</p>
 
         <div class="interactive-question-box">
           <h3 class="question-text">Намтай болзоонд явах уу? 🥺</h3>
           <div class="runaway-button-wrapper">
-            <button id="btn-yes" class="btn btn-primary btn-yes-fixed" onclick="onAcceptInvitation()">
-              Тийм ээ! 💖
-            </button>
-            <button id="btn-no" class="btn btn-danger btn-no-runaway" onmouseover="evadeNoButton()" onclick="evadeNoButton()">
-              Үгүй 😜
-            </button>
+            <button id="btn-yes" class="btn btn-primary btn-yes-fixed" onclick="onAcceptInvitation()" aria-label="Тийм">Тийм ээ! 💖</button>
+            <button id="btn-no" class="btn btn-danger btn-no-runaway" onmouseover="evadeNoButton()" onclick="evadeNoButton()" aria-label="Үгүй">Үгүй 😜</button>
           </div>
         </div>
       </section>
 
       <!-- STEP 5: TICKET PASS -->
-      <section id="step-5" class="step-view">
+      <section id="step-5" class="step-view" aria-labelledby="pass-title">
         <div class="success-banner">
-          <div class="heart-bounce">🎉</div>
-          <h2>Зөвшөөрсөнд маш их баярлалаа!</h2>
-          <p>Бидэнд гайхалтай сайхан өдөр хүлээж байна!</p>
+          <div class="heart-bounce" aria-hidden="true">🎉</div>
+          <h2 id="pass-title">Зөвшөөрсөнд баярлалаа!</h2>
+          <p>Чамтай хамт үлдэх сайхан дурсамжууд биднийг хүлээж байна.</p>
         </div>
 
         <div class="ticket-card" id="boarding-pass">
@@ -595,7 +375,7 @@
     </div>
   </main>
 
-  <canvas id="confetti-canvas"></canvas>
+  <canvas id="confetti-canvas" aria-hidden="true"></canvas>
 
   <script>
     const AppState = {
@@ -611,6 +391,10 @@
       initLiveCounter();
       initFloatingHeartsCanvas();
       updateProgressBar();
+      // respond to resize for canvases
+      window.addEventListener('resize', () => {
+        resizeCanvases();
+      });
     });
 
     function goToStep(stepNumber) {
@@ -621,12 +405,14 @@
 
       if (currentView && nextView) {
         currentView.classList.remove("active");
-        
         setTimeout(() => {
           AppState.currentStep = stepNumber;
           nextView.classList.add("active");
           updateProgressBar();
-        }, 150);
+          // update aria value
+          const progressBar = document.getElementById('progress-bar');
+          if (progressBar) progressBar.setAttribute('aria-valuenow', Math.round(((AppState.currentStep + 1)/(AppState.totalSteps+1))*100));
+        }, 120);
       }
     }
 
@@ -642,9 +428,7 @@
       function updateCounter() {
         const now = new Date();
         const diff = now - AppState.startDate;
-
         if (diff < 0) return;
-
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
         const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
         const minutes = Math.floor((diff / 1000 / 60) % 60);
@@ -658,7 +442,6 @@
           document.getElementById("cnt-secs").innerText = String(seconds).padStart(2, '0');
         }
       }
-
       updateCounter();
       setInterval(updateCounter, 1000);
     }
@@ -666,13 +449,13 @@
     function selectActivity(element, activityTitle) {
       const cards = document.querySelectorAll(".activity-card");
       cards.forEach(card => card.classList.remove("active"));
-
       element.classList.add("active");
       AppState.selectedActivity = activityTitle;
     }
 
     function validateCustomizer() {
-      const dateInput = document.getElementById("date-time-picker").value;
+      const dateInputEl = document.getElementById("date-time-picker");
+      const dateInput = dateInputEl ? dateInputEl.value : '';
 
       if (!dateInput) {
         alert("Хамтдаа явах өдөр болон цагаа сонгоно уу! 📅");
@@ -680,39 +463,50 @@
       }
 
       const dateObj = new Date(dateInput);
-      const options = { 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric', 
-        hour: '2-digit', 
-        minute: '2-digit' 
-      };
-      AppState.selectedDateTime = dateObj.toLocaleDateString('mn-MN', options);
-      AppState.customNote = document.getElementById("custom-note").value;
+      // Friendly localized format with time
+      const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+      try {
+        AppState.selectedDateTime = dateObj.toLocaleString('mn-MN', options);
+      } catch (e) {
+        AppState.selectedDateTime = dateObj.toString();
+      }
 
+      AppState.customNote = document.getElementById("custom-note").value || '';
       goToStep(4);
     }
 
     function evadeNoButton() {
       const noBtn = document.getElementById("btn-no");
       const card = document.getElementById("main-card");
+      if (!noBtn || !card) return;
 
-      const maxX = card.clientWidth - noBtn.clientWidth - 30;
-      const maxY = card.clientHeight - noBtn.clientHeight - 30;
+      const cardRect = card.getBoundingClientRect();
+      const btnRect = noBtn.getBoundingClientRect();
 
-      const randomX = Math.floor(Math.random() * maxX) - (maxX / 2);
-      const randomY = Math.floor(Math.random() * maxY) - (maxY / 2);
+      // compute available area inside the card for movement
+      const padding = 20;
+      const maxLeft = cardRect.width - btnRect.width - padding;
+      const maxTop = cardRect.height - btnRect.height - padding;
 
-      noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
+      // pick random coordinates within safe range
+      const x = Math.floor(Math.random() * Math.max(1, maxLeft)) - (cardRect.width/2 - btnRect.width/2);
+      const y = Math.floor(Math.random() * Math.max(1, maxTop)) - (cardRect.height/2 - btnRect.height/2);
+
+      // apply transform but clamp values to avoid jumping off-screen
+      const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+      const clampedX = clamp(x, -cardRect.width/2 + 10, cardRect.width/2 - 10);
+      const clampedY = clamp(y, -cardRect.height/2 + 10, cardRect.height/2 - 10);
+
+      noBtn.style.transform = `translate(${clampedX}px, ${clampedY}px)`;
     }
 
     function onAcceptInvitation() {
       document.getElementById("pass-activity").innerText = AppState.selectedActivity;
       document.getElementById("pass-time").innerText = AppState.selectedDateTime || "Тохиролцох 🗓️";
 
-      if (AppState.customNote.trim() !== "") {
+      if (AppState.customNote && AppState.customNote.trim() !== "") {
         document.getElementById("pass-note-container").style.display = "block";
-        document.getElementById("pass-note-text").innerText = `"${AppState.customNote}"`;
+        document.getElementById("pass-note-text").innerText = '"' + AppState.customNote.trim() + '"';
       }
 
       goToStep(5);
@@ -723,9 +517,16 @@
       AppState.currentStep = 0;
       document.getElementById("date-time-picker").value = "";
       document.getElementById("custom-note").value = "";
-      
+      AppState.selectedActivity = "Романтик оройн хоол & Дээврийн ресторан 🥂";
+      AppState.selectedDateTime = "";
+      AppState.customNote = "";
+
       const noBtn = document.getElementById("btn-no");
-      noBtn.style.transform = "translate(0,0)";
+      if (noBtn) noBtn.style.transform = "translate(0,0)";
+
+      // reset activity cards
+      const cards = document.querySelectorAll('.activity-card');
+      cards.forEach((c,i)=>{ c.classList.toggle('active', i===0); });
 
       goToStep(0);
     }
@@ -738,35 +539,37 @@
       let width = canvas.width = window.innerWidth;
       let height = canvas.height = window.innerHeight;
 
-      window.addEventListener("resize", () => {
-        width = canvas.width = window.innerWidth;
-        height = canvas.height = window.innerHeight;
-      });
+      function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
+      window.addEventListener('resize', resize);
 
       const hearts = [];
-      for (let i = 0; i < 20; i++) {
-        hearts.push({
-          x: Math.random() * width,
-          y: height + Math.random() * 100,
-          size: Math.random() * 10 + 6,
-          speed: Math.random() * 1.2 + 0.4,
-          opacity: Math.random() * 0.4 + 0.2
-        });
+      for (let i = 0; i < 18; i++) {
+        hearts.push({ x: Math.random() * width, y: height + Math.random() * 120, size: Math.random() * 12 + 6, speed: Math.random() * 1.2 + 0.4, opacity: Math.random() * 0.45 + 0.25, sway: (Math.random()-0.5)*0.8 });
+      }
+
+      function drawHeart(x, y, size, color){
+        ctx.save();
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        const topCurveHeight = size * 0.3;
+        ctx.moveTo(x, y + topCurveHeight);
+        ctx.bezierCurveTo(x, y, x - size/2, y, x - size/2, y + topCurveHeight);
+        ctx.bezierCurveTo(x - size/2, y + (size+topCurveHeight)/2, x, y + (size+topCurveHeight), x, y + size);
+        ctx.bezierCurveTo(x, y + (size+topCurveHeight), x + size/2, y + (size+topCurveHeight)/2, x + size/2, y + topCurveHeight);
+        ctx.bezierCurveTo(x + size/2, y, x, y, x, y + topCurveHeight);
+        ctx.closePath();
+        ctx.globalAlpha = 0.9;
+        ctx.fill();
+        ctx.restore();
       }
 
       function render() {
-        ctx.clearRect(0, 0, width, height);
+        ctx.clearRect(0,0,width,height);
         hearts.forEach(h => {
           h.y -= h.speed;
-          if (h.y < -20) h.y = height + 20;
-
-          ctx.save();
-          ctx.globalAlpha = h.opacity;
-          ctx.fillStyle = "#ff2a5f";
-          ctx.beginPath();
-          ctx.arc(h.x, h.y, h.size / 2, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.restore();
+          h.x += Math.sin(h.y * 0.01) * h.sway;
+          if (h.y < -40) { h.y = height + Math.random() * 80; h.x = Math.random() * width; }
+          drawHeart(h.x, h.y, h.size, '#ff2a5f');
         });
         requestAnimationFrame(render);
       }
@@ -784,41 +587,31 @@
       const particles = [];
       const colors = ["#ff2a5f", "#ec4899", "#8b5cf6", "#3b82f6", "#10b981", "#f59e0b"];
 
-      for (let i = 0; i < 120; i++) {
-        particles.push({
-          x: width / 2,
-          y: height / 2,
-          vx: (Math.random() - 0.5) * 16,
-          vy: (Math.random() - 0.5) * 16 - 3,
-          size: Math.random() * 7 + 3,
-          color: colors[Math.floor(Math.random() * colors.length)],
-          gravity: 0.2,
-          opacity: 1
-        });
+      for (let i = 0; i < 140; i++) {
+        particles.push({ x: width / 2 + (Math.random()-0.5)*80, y: height / 2 + (Math.random()-0.5)*80, vx: (Math.random() - 0.5) * 14, vy: (Math.random() - 0.8) * 14, size: Math.random() * 8 + 4, color: colors[Math.floor(Math.random() * colors.length)], gravity: 0.25, opacity: 1 });
       }
 
       function animate() {
-        ctx.clearRect(0, 0, width, height);
-
-        particles.forEach((p, i) => {
+        ctx.clearRect(0,0,width,height);
+        for (let i = particles.length - 1; i >= 0; i--) {
+          const p = particles[i];
           p.vy += p.gravity;
           p.x += p.vx;
           p.y += p.vy;
-          p.opacity -= 0.009;
-
-          ctx.save();
-          ctx.globalAlpha = Math.max(0, p.opacity);
-          ctx.fillStyle = p.color;
-          ctx.fillRect(p.x, p.y, p.size, p.size);
-          ctx.restore();
-
-          if (p.opacity <= 0) particles.splice(i, 1);
-        });
-
+          p.opacity -= 0.01;
+          ctx.save(); ctx.globalAlpha = Math.max(0, p.opacity); ctx.fillStyle = p.color; ctx.fillRect(p.x, p.y, p.size, p.size); ctx.restore();
+          if (p.opacity <= 0 || p.y > height + 100) particles.splice(i, 1);
+        }
         if (particles.length > 0) requestAnimationFrame(animate);
       }
       animate();
     }
+
+    function resizeCanvases() {
+      const canvases = [document.getElementById('hearts-canvas'), document.getElementById('confetti-canvas')];
+      canvases.forEach(c => { if (c) { c.width = window.innerWidth; c.height = window.innerHeight; } });
+    }
+
   </script>
 </body>
 </html>
