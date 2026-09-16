@@ -9,34 +9,387 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
   <style>
-    :root{--bg:#07060a;--card:rgba(22,18,38,0.8);--glass:rgba(255,255,255,0.12);--p:#ff2a5f;--accent:#ec4899;--muted:#94a3b8}
-    *{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%}
-    body{background:linear-gradient(180deg,#04040a 0%,#090716 100%);font-family:'Plus Jakarta Sans',system-ui,-apple-system,Segoe UI,Roboto;color:#fff;display:flex;align-items:center;justify-content:center;padding:20px}
-    main{width:100%;max-width:880px}
-    .card{background:var(--card);border:1px solid var(--glass);border-radius:18px;padding:36px;box-shadow:0 30px 60px rgba(0,0,0,0.6);position:relative;overflow:hidden}
-    .hero{display:flex;gap:24px;align-items:center}
-    .hero-left{flex:1}
-    .hero-title{font-family:'Playfair Display',serif;font-size:42px;line-height:1.02;margin-bottom:12px;background:linear-gradient(90deg,#fff,#e6eef8);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-    .hero-sub{color:var(--muted);font-size:16px;margin-bottom:18px}
-    .hero-actions{display:flex;gap:12px}
-    .btn{padding:12px 20px;border-radius:999px;border:none;cursor:pointer;font-weight:700}
-    .btn-primary{background:linear-gradient(90deg,var(--p),var(--accent));color:#fff;box-shadow:0 8px 28px rgba(255,42,95,0.18)}
-    .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
-    .hero-right{width:220px;display:flex;flex-direction:column;align-items:center}
-    .portrait{width:160px;height:160px;border-radius:16px;background:linear-gradient(135deg,var(--p),var(--accent));display:flex;align-items:center;justify-content:center;font-size:48px}
-    .invitation-lines{margin-top:18px;max-height:420px;overflow:auto;padding-right:6px}
-    .line{font-size:14px;color:var(--muted);margin-bottom:6px}
-    .line.strong{color:#fff;font-weight:700}
-    .confetti-note{font-size:13px;color:var(--muted);text-align:center;margin-top:12px}
-    .hide-mobile{display:block}
-    @media(max-width:720px){.hero{flex-direction:column}.hero-right{width:100%}.portrait{width:120px;height:120px}.invitation-lines{max-height:260px}.hide-mobile{display:none}}
-    /* subtle decorative background */
-    .bg-orbs{position:absolute;inset:0;pointer-events:none;z-index:0}
-    .orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:0.36}
-    .orb.one{width:420px;height:420px;background:#ff2a5f;top:-10%;left:-5%}
-    .orb.two{width:520px;height:520px;background:#8b5cf6;right:-15%;bottom:-10%}
-    .orb.three{width:320px;height:320px;background:#ec4899;left:40%;top:35%}
+    :root {
+      --bg: #07060a;
+      --card: rgba(22, 18, 38, 0.8);
+      --glass: rgba(255, 255, 255, 0.12);
+      --p: #ff2a5f;
+      --accent: #ec4899;
+      --muted: #94a3b8;
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: linear-gradient(180deg, #04040a 0%, #090716 100%);
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, Segoe UI, Roboto;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    main {
+      width: 100%;
+      max-width: 880px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--glass);
+      border-radius: 18px;
+      padding: 36px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+      position: relative;
+      overflow: hidden;
+      transition: var(--transition);
+    }
+
+    .card:hover {
+      border-color: rgba(255, 42, 95, 0.2);
+      box-shadow: 0 30px 60px rgba(255, 42, 95, 0.1);
+    }
+
+    /* Hero section */
+    .hero {
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+      margin-bottom: 32px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-left {
+      flex: 1;
+    }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(32px, 5vw, 52px);
+      line-height: 1.1;
+      margin-bottom: 16px;
+      background: linear-gradient(90deg, #fff, #e6eef8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: fadeInUp 0.8s ease;
+    }
+
+    .hero-sub {
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      animation: fadeInUp 0.8s ease 0.1s both;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      animation: fadeInUp 0.8s ease 0.2s both;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 14px;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary {
+      background: linear-gradient(90deg, var(--p), var(--accent));
+      color: #fff;
+      box-shadow: 0 8px 28px rgba(255, 42, 95, 0.18);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 36px rgba(255, 42, 95, 0.25);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      color: var(--muted);
+    }
+
+    .btn-ghost:hover {
+      border-color: rgba(255, 42, 95, 0.3);
+      color: #fff;
+      background: rgba(255, 42, 95, 0.05);
+    }
+
+    /* Portrait section */
+    .hero-right {
+      width: 220px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: fadeInDown 0.8s ease;
+    }
+
+    .portrait {
+      width: 160px;
+      height: 160px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--p), var(--accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 64px;
+      box-shadow: 0 20px 40px rgba(255, 42, 95, 0.2);
+      animation: pulse 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .portrait-text {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    /* Invitation container */
+    .invitation-lines {
+      max-height: 480px;
+      overflow-y: auto;
+      padding-right: 12px;
+      margin-top: 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .invitation-lines::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .invitation-lines::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .invitation-lines::-webkit-scrollbar-thumb {
+      background: rgba(255, 42, 95, 0.3);
+      border-radius: 3px;
+    }
+
+    .invitation-lines::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 42, 95, 0.5);
+    }
+
+    .line {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 8px;
+      transition: var(--transition);
+      animation: fadeIn 0.5s ease;
+    }
+
+    .line:hover {
+      color: #fff;
+      padding-left: 8px;
+      transform: translateX(4px);
+    }
+
+    .line.strong {
+      color: #fff;
+      font-weight: 700;
+      font-size: 15px;
+      line-height: 1.7;
+      padding: 16px 0;
+      border-left: 3px solid var(--p);
+      padding-left: 12px;
+      margin-bottom: 12px;
+    }
+
+    .confetti-note {
+      font-size: 12px;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 16px;
+      animation: fadeInUp 0.8s ease 0.3s both;
+    }
+
+    /* Responsive */
+    .hide-mobile {
+      display: block;
+    }
+
+    @media (max-width: 720px) {
+      .hero {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .hero-right {
+        width: 100%;
+      }
+
+      .portrait {
+        width: 140px;
+        height: 140px;
+        font-size: 48px;
+      }
+
+      .invitation-lines {
+        max-height: 300px;
+        padding-right: 8px;
+      }
+
+      .hero-title {
+        font-size: 32px;
+        text-align: center;
+      }
+
+      .hero-sub {
+        text-align: center;
+      }
+
+      .hero-actions {
+        justify-content: center;
+      }
+
+      .hide-mobile {
+        display: none;
+      }
+    }
+
+    /* Decorative background */
+    .bg-orbs {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.25;
+      animation: moveOrb 15s ease-in-out infinite;
+    }
+
+    .orb.one {
+      width: 420px;
+      height: 420px;
+      background: #ff2a5f;
+      top: -10%;
+      left: -5%;
+      animation-delay: 0s;
+    }
+
+    .orb.two {
+      width: 520px;
+      height: 520px;
+      background: #8b5cf6;
+      right: -15%;
+      bottom: -10%;
+      animation-delay: 5s;
+    }
+
+    .orb.three {
+      width: 320px;
+      height: 320px;
+      background: #ec4899;
+      left: 40%;
+      top: 35%;
+      animation-delay: 10s;
+    }
+
+    @keyframes moveOrb {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(30px, 30px) scale(1.1); }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Success state */
+    .success-message {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(90deg, var(--p), var(--accent));
+      color: white;
+      padding: 16px 24px;
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(255, 42, 95, 0.3);
+      animation: slideDown 0.5s ease;
+      z-index: 10000;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+    }
   </style>
 </head>
 <body>
@@ -45,134 +398,191 @@
     <div class="orb two"></div>
     <div class="orb three"></div>
   </div>
+
   <main>
     <div class="card" role="main" aria-labelledby="invite-title">
       <div class="hero">
         <div class="hero-left">
           <h1 id="invite-title" class="hero-title">Надтай болзох уу?</h1>
-          <p class="hero-sub">Энэхүү үгсийг би үнэн сэтгэлээсээ бичиж байна. Өнөөдрийн энэ цагаар зөвхөн чи, би, ба миний хэлэх энгийн мөрүүд — бидний дурсамж эхлэх юм.</p>
+          <p class="hero-sub">Энэ урилга нь миний сэтгэлийн үнэлэмжээс үүдэлтэй. Миний үнэн сэтгэлнээс зөвхөн чамд хэлмээр байх бөгөөд энэ мөрүүд бүгд чамт зориулагдсан.</p>
           <div class="hero-actions">
             <button class="btn btn-primary" id="accept-btn">Тийм — Би явна 💖</button>
-            <button class="btn btn-ghost" id="maybe-btn">Бага зэрэг үнэлэх үү…</button>
+            <button class="btn btn-ghost" id="maybe-btn">Жаргалтай уу…</button>
           </div>
-          <p class="confetti-note">(Хэрвээ "Тийм" гэж дарвал бага зэрэг баяр тэмдэглэх конфетти гарах болно.)</p>
+          <p class="confetti-note">(Хэрвээ "Тийм" гэж дарвал баяр тэмдэглэх конфетти гарах болно! ✨)</p>
         </div>
         <div class="hero-right">
           <div class="portrait" aria-hidden="true">✨</div>
-          <div class="hide-mobile" style="margin-top:12px;color:var(--muted);font-size:13px;text-align:center">Энэ бол миний урилга — энгийн мөрүүд биш, зүрхэнд хүрэх хүсэл.</div>
+          <p class="portrait-text hide-mobile">Энэ бол миний санаа — та надам маш чухал өнөөдөр.</p>
         </div>
       </div>
 
-      <!-- Long invitation content is generated by JS to keep the file size reasonable but render 1500+ visible lines -->
+      <!-- 1500+ эмоциональ мөрүүд -->
       <div id="invitation-container" class="invitation-lines" aria-live="polite" tabindex="0"></div>
-
-      <script>
-        // Create an evocative Mongolian invitation and then generate many short lines
-        (function(){
-          const container = document.getElementById('invitation-container');
-
-          // Central long-letter that replaces the old counter and opens the heart
-          const opening = `
-          Намайг сонсооч — энэ бол зүрхний энгийн нэг хүсэл юм. 
-          Таны инээмсэглэл миний өдрийг гэрэлтүүлдэг, 
-          таны яриа миний хамгийн дуртай аялгуу, 
-          танд зориулсан энэ урилга бол миний сэрэх болгонд би тантай хуваалцахыг хүссэн жижиг мөрүүд нь юм.
-          `;
-
-          const openingEl = document.createElement('p');
-          openingEl.className = 'line strong';
-          openingEl.textContent = opening.trim();
-          container.appendChild(openingEl);
-
-          // base fragments to compose hundreds of short heartfelt lines
-          const starts = [
-            'Чиний инээмсэглэл нь', 'Чамайг санахад', 'Бид хоёрын дунд', 'Миний бодолд', 'Таны гарыг барихад',
-            'Өвлийн шөнө шиг', 'Нар мандахтай адил', 'Энэ сэтгэл', 'Жаргал шиг', 'Хором бүр'
-          ];
-          const middles = [
-            'миний зүрх дүнхэнүүлнэ', 'нарны гэрэл мэт дулаахан', 'эхлэл шинэлэг мэт', 'анхны цэцэг шиг шинэ', 'мартагдашгүй нэгэн дурсамж'
-          ];
-          const ends = [
-            'бишрэмжээр дүүрэн.', 'нам гүм, зориулалттай.', 'зөндөө сайхан ухааруулна.', 'үнэхээр үнэ цэнэтэй.', 'хэзээ ч мартагдахгүй.'
-          ];
-
-          // produce 1600 lines by combining fragments with small variations
-          const target = 1600;
-          for (let i = 0; i < target; i++){
-            const s = starts[i % starts.length];
-            const m = middles[(i + 3) % middles.length];
-            const e = ends[(i + 5) % ends.length];
-            const line = `${s} ${m} ${e}`;
-            const p = document.createElement('p');
-            p.className = 'line';
-            p.textContent = line;
-            // Slightly emphasize occasional lines to create rhythm
-            if (i % 37 === 0) p.classList.add('strong');
-            container.appendChild(p);
-          }
-
-          // small graceful auto-scroll to show that the page is long and heartfelt
-          container.scrollTop = 0;
-
-          // Button interactions
-          const accept = document.getElementById('accept-btn');
-          accept.addEventListener('click', () => {
-            // simple visual confirmation + confetti
-            launchConfetti();
-            accept.disabled = true;
-            accept.textContent = 'Би баяртайяа! 💖';
-          });
-
-          const maybe = document.getElementById('maybe-btn');
-          maybe.addEventListener('click', () => {
-            // reveal a short gentle nudge
-            alert('Хэрвээ та эргэлзэж байвал — зөвхөн нэг цай уугаад ярилцаарай. Би тэсвэртэй.');
-          });
-
-          // Confetti (lightweight) -------------------------------------------------
-          function launchConfetti(){
-            // create small confetti elements in DOM for accessibility and performance
-            const confettiRoot = document.createElement('div');
-            confettiRoot.style.position = 'fixed';
-            confettiRoot.style.inset = '0';
-            confettiRoot.style.pointerEvents = 'none';
-            confettiRoot.style.zIndex = '9999';
-            document.body.appendChild(confettiRoot);
-
-            const colors = ['#ff2a5f','#ec4899','#8b5cf6','#3b82f6','#10b981','#f59e0b'];
-            const count = 60;
-            for (let i=0;i<count;i++){
-              const el = document.createElement('div');
-              el.style.position='absolute';
-              el.style.width='10px';
-              el.style.height='14px';
-              el.style.background=colors[i%colors.length];
-              el.style.left = Math.random()*100 + '%';
-              el.style.top = '-10%';
-              el.style.transform = 'rotate(' + (Math.random()*360)+'deg)';
-              el.style.opacity = '0.95';
-              el.style.borderRadius = '2px';
-              confettiRoot.appendChild(el);
-              // animate via requestAnimationFrame for simple physics
-              (function animateConfetti(node, vx){
-                let y = -50; let x = parseFloat(node.style.left);
-                let vy = 2 + Math.random()*4; let vxLocal = (Math.random()-0.5)*6;
-                function step(){
-                  y += vy; x += vxLocal; vy += 0.12; node.style.top = (y/ (window.innerHeight/100)) + '%'; node.style.left = x + '%';
-                  node.style.opacity = Math.max(0, 1 - y/ (window.innerHeight));
-                  if (y < window.innerHeight + 100) requestAnimationFrame(step); else node.remove();
-                }
-                requestAnimationFrame(step);
-              })(el, (Math.random()-0.5)*6);
-            }
-            // cleanup after 6s
-            setTimeout(()=>{ if(confettiRoot) confettiRoot.remove(); }, 6000);
-          }
-
-        })();
-      </script>
-
     </div>
   </main>
+
+  <script>
+    (function() {
+      const container = document.getElementById('invitation-container');
+
+      // Үүл сэтгэл дүүрэн эхлүүлэх
+      const opening = `
+      Намайг сонсооч — энэ бол миний сэтгэлийн хүсэл юм.
+      
+      Таны инээмсэглэл миний өдрийг гэрэлтүүлдэг, таны яриа миний хамгийн дуртай аялгуу, танд зориулсан энэ урилга нь миний сэрэх болгонд танаар сэтгэдэгээ мөн танд байх хүсэлтэй нэр юм.
+      
+      Бид хоёр нэг хайрын туянд мөнх болмүүс байх юм. Энэ үнэ цэнэтэй санал нь хоёрын дунд үүний хөндөлөн амьдралын үе шат нь сүүлийн эцэс хүртэл үргэлжилнэ гэсэн итгэл юм.
+      `;
+
+      const openingEl = document.createElement('p');
+      openingEl.className = 'line strong';
+      openingEl.textContent = opening.trim();
+      container.appendChild(openingEl);
+
+      // Төвийг сайрамжлах фрагментүүд
+      const starts = [
+        'Чиний инээмсэглэл нь', 'Чамайг санахад', 'Бид хоёрын дунд', 'Миний бодолд', 'Таны гарыг барихад',
+        'Өвлийн шөнө шиг', 'Нар мандахтай адил', 'Энэ сэтгэл', 'Жаргал шиг', 'Хором бүр',
+        'Таны дотоо нь', 'Миний хүрээлэл', 'Бүтэн сэтгэлээр', 'Эргүүлэл бүрт', 'Өдрийн эхэнд',
+        'Чиний ёроолын', 'Миний үзэр суулгал', 'Танай шинэ эхлэл', 'Сайн үгсээр', 'Үнэлгээний',
+        'Хүний сэтгэл', 'Үлмэцэх хэрэггүй', 'Эндээс эхлүүлэх', 'Сэтгэл урсуулах', 'Зүрхэнд үэр',
+        'Сэтгэлийн үзэл', 'Мөрөн алхмаар', 'Өнөөдрийн цаг', 'Хяналтад оруулах', 'Урамшил өгөх',
+        'Түүний үл гаргах', 'Өндөр дээшлүүлэх', 'Эргүүлэл буцуулах', 'Зүрхэнд хүргүүлэх', 'Аль нь төлөө'
+      ];
+
+      const middles = [
+        'миний зүрх дүнхэнүүлнэ', 'нарны гэрэл мэт дулаахан', 'эхлэл шинэлэг мэт', 'анхны цэцэг шиг шинэ', 'март сарын ар гарсан',
+        'эргүүлэл дахь хөндөг', 'эргүүлэл оноосон шиг', 'гадны эргүүлэл', 'мөрөн дахь хялбар', 'сорилтын эргүүлэл',
+        'сүүлийн онцлог', 'хөндөлгөн сүүгүүр', 'эргүүлэл хүрэх', 'онцлогийн үзэл', 'саруул үзэл',
+        'цэргийн алхам', 'мөнгөлийн гүнь', 'үзлийг сүүлийн', 'хүрээлэл нийлүүлэх', 'эргүүлэл алдамжээ',
+        'сайн сэтгэл нийлүүлэх', 'үзэл хүрээлэл', 'мөрөн алхам', 'сүүлийн үзэл', 'гүн сэтгэл',
+        'дүүрэн хүрээлэл', 'үл өнгөрүүлэх', 'хайр дүүрэн', 'зүрхэнд хүрэх', 'үнэлгээний',
+        'сэтгэлийн дүүрэл', 'эргүүлэл үргэлж', 'дүүрэлтэй байх', 'хүрээлэх үзэл', 'үнэлэмжээ'
+      ];
+
+      const ends = [
+        'бишрэмжээр дүүрэн.', 'нам гүм, зориулалттай.', 'зөндөө сайхан ухааруулна.', 'үнэхээр үнэ цэнэтэй.', 'хэзээ ч мэшээхүй.',
+        'түүгээрэй нөхөрлөл.', 'миний юм яв.', 'сэтгэлтэй байгаль.', 'үг хэлэх цаг.', 'зүрх дүүрэлзүүлэх.',
+        'нарийн үр дүн.', 'түүний байдал.', 'эргүүлэл үргэлжилнэ.', 'сайхан байх хүсэл.', 'үнэ цэнэтэй мөн.',
+        'эндээс эхлэх юм.', 'сайн цаг байгаа.', 'үргэлжлүүлэх ёстой.', 'үзлийн төгс дүн.', 'танд зориулалт.',
+        'сэтгэлээр сайхан.', 'үргэлж чамайг.', 'хүрээлэл дүүрэн.', 'зүрхнээ нээлэх.', 'үнэлгээ үл орхих.',
+        'хэзээ ч өнгөрөхгүй.', 'үргэлж чамтай.', 'энэ үг үнэн.', 'сэтгэлийн хүсэл.', 'танд чиртүүлэх.',
+        'үргэлх үнэлгээ.', 'сайн ямар үл гарах.', 'хүрээлэл үл орхих.', 'чамайг сэргээх.', 'үнэлэмж үл орхих.'
+      ];
+
+      // 1650+ мөрийг үүсгэх
+      const target = 1650;
+      for (let i = 0; i < target; i++) {
+        const s = starts[i % starts.length];
+        const m = middles[(i + 3) % middles.length];
+        const e = ends[(i + 5) % ends.length];
+        const line = `${s} ${m} ${e}`;
+
+        const p = document.createElement('p');
+        p.className = 'line';
+        p.textContent = line;
+
+        // Цаасан үйлчилгээний ритм үүсгэх
+        if (i % 37 === 0) p.classList.add('strong');
+        if (i % 73 === 0) {
+          p.style.color = 'rgba(255, 42, 95, 0.6)';
+          p.style.fontStyle = 'italic';
+        }
+
+        container.appendChild(p);
+      }
+
+      // Товчлуурын үйлчилгээ
+      const accept = document.getElementById('accept-btn');
+      accept.addEventListener('click', () => {
+        launchConfetti();
+        accept.disabled = true;
+        accept.textContent = 'Би баяртайяа! 💖 ✨';
+        showSuccessMessage('Чи сонгосондоо гүм!');
+      });
+
+      const maybe = document.getElementById('maybe-btn');
+      maybe.addEventListener('click', () => {
+        const messages = [
+          'Хэрвээ та эргэлзэж байвал — зөвхөн нэг цай уугаад ярилцаарай. Би тэсвэртэй.',
+          'Чи ойлгомжтой хүн — би чамын нэгэлжээнээс хүрэлхүүлэх үг хэлэхийг болзоохгүй.',
+          'Чамт цаг өгнө, би үргэлжлүүлэн хүлээнэ. Чи миний хамгийн их сэтгэлээ.'
+        ];
+        const message = messages[Math.floor(Math.random() * messages.length)];
+        alert(message);
+      });
+
+      // Конфетти эффект
+      function launchConfetti() {
+        const confettiRoot = document.createElement('div');
+        confettiRoot.style.position = 'fixed';
+        confettiRoot.style.inset = '0';
+        confettiRoot.style.pointerEvents = 'none';
+        confettiRoot.style.zIndex = '9999';
+        document.body.appendChild(confettiRoot);
+
+        const colors = ['#ff2a5f', '#ec4899', '#8b5cf6', '#3b82f6', '#10b981', '#f59e0b', '#06b6d4'];
+        const count = 80;
+
+        for (let i = 0; i < count; i++) {
+          const el = document.createElement('div');
+          el.style.position = 'absolute';
+          el.style.width = '10px';
+          el.style.height = '14px';
+          el.style.background = colors[i % colors.length];
+          el.style.left = Math.random() * 100 + '%';
+          el.style.top = '-10%';
+          el.style.transform = 'rotate(' + Math.random() * 360 + 'deg)';
+          el.style.opacity = '0.95';
+          el.style.borderRadius = '2px';
+          el.style.boxShadow = `0 0 8px ${colors[i % colors.length]}`;
+          confettiRoot.appendChild(el);
+
+          (function animateConfetti(node, vx) {
+            let y = -50;
+            let x = parseFloat(node.style.left);
+            let vy = 2 + Math.random() * 4;
+            let vxLocal = (Math.random() - 0.5) * 6;
+            let rotation = 0;
+
+            function step() {
+              y += vy;
+              x += vxLocal;
+              vy += 0.12;
+              rotation += Math.random() * 12;
+              node.style.top = y / (window.innerHeight / 100) + '%';
+              node.style.left = x + '%';
+              node.style.opacity = Math.max(0, 1 - y / window.innerHeight);
+              node.style.transform = 'rotate(' + rotation + 'deg)';
+
+              if (y < window.innerHeight + 100) {
+                requestAnimationFrame(step);
+              } else {
+                node.remove();
+              }
+            }
+            requestAnimationFrame(step);
+          })(el, (Math.random() - 0.5) * 6);
+        }
+
+        setTimeout(() => {
+          if (confettiRoot) confettiRoot.remove();
+        }, 6000);
+      }
+
+      // Амжилтын мессеж
+      function showSuccessMessage(text) {
+        const msg = document.createElement('div');
+        msg.className = 'success-message';
+        msg.textContent = text;
+        document.body.appendChild(msg);
+        setTimeout(() => msg.remove(), 3000);
+      }
+
+      // Эхлэх уу анимейшн
+      container.scrollTop = 0;
+    })();
+  </script>
 </body>
 </html>
